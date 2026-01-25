@@ -1,0 +1,82 @@
+<!--Saved by Quest 5.9.9166.36226-->
+<asl version="580">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Heist of the Century">
+    <gameid>4be257b7-c6e2-4449-9055-55394a702d93</gameid>
+    <version>1.0</version>
+    <firstpublished>2026</firstpublished>
+    <threat type="int">0</threat>
+    <statusattributes type="stringdictionary">
+      <item>
+        <key>threat</key>
+        <value>Threat: !/10</value>
+      </item>
+    </statusattributes>
+    <start type="script">
+      game.threat = 0
+    </start>
+  </game>
+  <object name="test room">
+    <inherit name="editor_room" />
+    <object name="player">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <statusattributes type="stringdictionary" />
+    </object>
+    <object name="Test Threat Increaser">
+      <inherit name="editor_object" />
+      <displayverbs type="stringlist">
+        <value>Increase Threat</value>
+        <value>Check Threat</value>
+      </displayverbs>
+      <increasethreat type="script">
+        game.threat = game.threat + 15
+        msg ("Your threat is: " + game.threat)
+      </increasethreat>
+      <checkthreat type="script"><![CDATA[
+        if (game.threat > 90) {
+          msg ("Your threat is larger than 90")
+        }
+        else if (game.threat > 80) {
+          msg ("Your threat is larger than 80")
+        }
+        else if (game.threat > 70) {
+          msg ("Your threat is larger than 70")
+        }
+        else if (game.threat > 60) {
+          msg ("Your threat is larger than 60")
+        }
+        else if (game.threat > 50) {
+          msg ("Your threat is larger than 50")
+        }
+        else if (game.threat > 40) {
+          msg ("Your threat is larger than 40")
+        }
+        else if (game.threat > 30) {
+          msg ("Your threat is larger than 30")
+        }
+        else if (game.threat > 20) {
+          msg ("Your threat is larger than 20")
+        }
+        else if (game.threat > 10) {
+          msg ("Your threat is larger than 10")
+        }
+        else {
+          msg ("Your threat is larger than 0")
+        }
+      ]]></checkthreat>
+      <useindividualverblist />
+    </object>
+  </object>
+  <verb>
+    <property>increasethreat</property>
+    <pattern>increase threat</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " increase threat " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>checkthreat</property>
+    <pattern>check threat</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " check threat " + object.article + "."</defaultexpression>
+  </verb>
+</asl>

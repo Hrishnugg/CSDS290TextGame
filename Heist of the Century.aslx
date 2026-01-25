@@ -19,6 +19,22 @@
   </game>
   <object name="test room">
     <inherit name="editor_room" />
+  </object>
+  <verb>
+    <property>increasethreat</property>
+    <pattern>increase threat</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " increase threat " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>checkthreat</property>
+    <pattern>check threat</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " check threat " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Entrance">
+    <inherit name="editor_room" />
+    <exit alias="north" to="Main Ballroom">
+      <inherit name="northdirection" />
+    </exit>
     <object name="player">
       <inherit name="editor_object" />
       <inherit name="editor_player" />
@@ -30,6 +46,7 @@
         <value>Increase Threat</value>
         <value>Check Threat</value>
       </displayverbs>
+      <useindividualverblist />
       <increasethreat type="script">
         game.threat = game.threat + 15
         msg ("Your threat is: " + game.threat)
@@ -66,17 +83,174 @@
           msg ("Your threat is larger than 0")
         }
       ]]></checkthreat>
-      <useindividualverblist />
     </object>
   </object>
-  <verb>
-    <property>increasethreat</property>
-    <pattern>increase threat</pattern>
-    <defaultexpression>WriteVerb(game.pov, "can't") + " increase threat " + object.article + "."</defaultexpression>
-  </verb>
-  <verb>
-    <property>checkthreat</property>
-    <pattern>check threat</pattern>
-    <defaultexpression>WriteVerb(game.pov, "can't") + " check threat " + object.article + "."</defaultexpression>
-  </verb>
+  <object name="Main Ballroom">
+    <inherit name="editor_room" />
+    <exit alias="south" to="Entrance">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="southwest" to="Coat Room">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="northwest" to="Music Salon">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="northeast" to="Kitchen">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit alias="southeast" to="Gallery">
+      <inherit name="southeastdirection" />
+    </exit>
+    <exit alias="up" to="Ballroom Second Floor">
+      <inherit name="updirection" />
+    </exit>
+  </object>
+  <object name="Gallery">
+    <inherit name="editor_room" />
+    <exit alias="northwest" to="Main Ballroom">
+      <inherit name="northwestdirection" />
+    </exit>
+  </object>
+  <object name="Coat Room">
+    <inherit name="editor_room" />
+    <exit alias="northeast" to="Main Ballroom">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="Music Salon">
+    <inherit name="editor_room" />
+    <exit alias="southeast" to="Main Ballroom">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="Kitchen">
+    <inherit name="editor_room" />
+    <exit alias="southwest" to="Main Ballroom">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="down" to="Basement Entrance">
+      <inherit name="downdirection" />
+    </exit>
+  </object>
+  <object name="Ballroom Second Floor">
+    <inherit name="editor_room" />
+    <exit alias="down" to="Main Ballroom">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="northwest" to="Bedchamber 1">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="west" to="Study">
+      <inherit name="westdirection" />
+    </exit>
+    <exit alias="southwest" to="Bathroom">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="south" to="Master Bedroom">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="southeast" to="Lounge">
+      <inherit name="southeastdirection" />
+    </exit>
+    <exit alias="east" to="Bedchamber 3">
+      <inherit name="eastdirection" />
+    </exit>
+    <exit alias="northeast" to="Bedchamber 2">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="Bedchamber 1">
+    <inherit name="editor_room" />
+    <exit alias="southeast" to="Ballroom Second Floor">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="Bedchamber 2">
+    <inherit name="editor_room" />
+    <exit alias="southwest" to="Ballroom Second Floor">
+      <inherit name="southwestdirection" />
+    </exit>
+  </object>
+  <object name="Bedchamber 3">
+    <inherit name="editor_room" />
+    <exit alias="west" to="Ballroom Second Floor">
+      <inherit name="westdirection" />
+    </exit>
+  </object>
+  <object name="Study">
+    <inherit name="editor_room" />
+    <exit alias="east" to="Ballroom Second Floor">
+      <inherit name="eastdirection" />
+    </exit>
+  </object>
+  <object name="Bathroom">
+    <inherit name="editor_room" />
+    <exit alias="northeast" to="Ballroom Second Floor">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="Master Bedroom">
+    <inherit name="editor_room" />
+    <exit alias="north" to="Ballroom Second Floor">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="Lounge">
+    <inherit name="editor_room" />
+    <exit alias="northwest" to="Ballroom Second Floor">
+      <inherit name="northwestdirection" />
+    </exit>
+  </object>
+  <object name="Basement Entrance">
+    <inherit name="editor_room" />
+    <exit alias="up" to="Kitchen">
+      <inherit name="updirection" />
+    </exit>
+    <exit alias="southwest" to="Basement Main">
+      <inherit name="southwestdirection" />
+    </exit>
+  </object>
+  <object name="Wine Cellar">
+    <inherit name="editor_room" />
+    <exit alias="northwest" to="Basement Main">
+      <inherit name="northwestdirection" />
+    </exit>
+  </object>
+  <object name="Basement Main">
+    <inherit name="editor_room" />
+    <exit alias="northeast" to="Basement Entrance">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit alias="southeast" to="Wine Cellar">
+      <inherit name="southeastdirection" />
+    </exit>
+    <exit alias="southwest" to="Dungeon">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="northwest" to="Canals Exit">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="south" to="Vault Room">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="Canals Exit">
+    <inherit name="editor_room" />
+    <exit alias="southeast" to="Basement Main">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="Dungeon">
+    <inherit name="editor_room" />
+    <exit alias="northeast" to="Basement Main">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="Vault Room">
+    <inherit name="editor_room" />
+    <exit alias="north" to="Basement Main">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
 </asl>

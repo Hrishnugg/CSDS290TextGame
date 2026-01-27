@@ -53,6 +53,18 @@
           <value>Use</value>
         </inventoryverbs>
         <drop type="boolean">false</drop>
+        <feature_usegive />
+        <selfuseon type="scriptdictionary">
+          <item key="Party Invitation">
+            if (Party Invitation.changedName) {
+              msg ("You already changed the name on the invitation")
+            }
+            else {
+              set (Party Invitation, "changedName", true)
+              msg ("You alter the text on the Party Invitation to show your name, Dinak Forger")
+            }
+          </item>
+        </selfuseon>
       </object>
     </object>
     <object name="Test Threat Increaser">
@@ -102,22 +114,23 @@
     <object name="Drunk Nobleman">
       <inherit name="editor_object" />
       <inherit name="male" />
+      <isDistracted type="boolean">false</isDistracted>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <lookedAt type="boolean">false</lookedAt>
       <look type="script">
         msg ("You see a well-dressed nobleman swaying on his feet. His mask is crooked on his face. He is holding a glass of champagne and has clearly had too much to drink. In his pocket, barely staying inside of it, you see what appears to be an invitation to the party.")
         set (Drunk Nobleman, "lookedAt", true)
       </look>
-      <isDistracted type="boolean">false</isDistracted>
-      <attr name="feature_usegive" type="boolean">false</attr>
       <speak type="script"><![CDATA[
         msg ("You approach the nobleman He squints at you, barely able to focus.")
         topics = Split ("Are you ok;What is your name;How's the party", ";")
         ShowMenu ("What would you like to do?", topics, false) {
           switch (result) {
             case ("What is your name") {
-              msg ("I am Alessandro Bellini")
+              msg ("Drunk Nobleman: \"I aM thE greAt ... ALesSanDro BElLinI\"<br/><br/>He sniffles...")
             }
             case ("How's the party") {
-              msg ("This party is great!")
+              msg ("Drunk Nobleman: ThIs PartY .... is GrEat! .... ThE ChamPagne neVeR sTOps .... fLowing\"<br/><br/>He chuckles...<br/><br/>Drunk Nobleman: \"If oNly i Had some ... MoRe\"")
             }
             case ("Are you ok") {
               msg ("Drunk Nobleman: \"oF coURse I’m fIne… whY wOuLDn’t I be?\"<br/><br/>He burps<br/><br/>Drunk Nobleman: \"I aM at tHE ... grEaT.... ''paRtY oF the CenTurY'.. afteR aLL\"")
@@ -138,7 +151,7 @@
         if (this.lookedAt) {
           if (this.isDistracted) {
             AddToInventory (Party Invitation)
-            msg ("You manage to take the Party Invitation while he is indulging in the Champagne")
+            msg ("You manage to take his personal Party Invitation while he is indulging in the Champagne. It lists his name \"Alessandro Bellini\"")
             set (player, "hasPartyInvitation", true)
           }
           else {
@@ -149,11 +162,15 @@
           msg ("You don't know what to steal from him. You might need to look closer at him.")
         }
       </steal>
-      <lookedAt type="boolean">false</lookedAt>
       <object name="Party Invitation">
         <inherit name="editor_object" />
         <look>A coveted invitation to Guido Giusseppe's 'Party of the Century'. The elites and nobles of Europe all wish to recieve one. It is stamped with the Giusseppe family seal.</look>
         <drop type="boolean">false</drop>
+        <changedName type="boolean">false</changedName>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+        </inventoryverbs>
       </object>
     </object>
     <object name="Champagne Bottle">
@@ -176,15 +193,20 @@
       <locked type="boolean">false</locked>
       <runscript />
       <lockmessage>In order to get into the party you must have an invitation from Guido Giusseppe himself.</lockmessage>
-      <script type="script">
+      <script type="script"><![CDATA[
         if (player.hasPartyInvitation) {
-          msg ("With the newly aquired party invitation you manage to make your way through the line and present it to the guard. He takes a look at it at lets you in.")
-          MovePlayer (Main Ballroom)
+          if (Party Invitation.changedName) {
+            msg ("With the altered Party Invitation showing your name, you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Welcome to the Party Mr. Forger, I hope you enjoy the festivities\"<br/><br/>With that you have successfully made it into the Giusseppe estate.")
+            MovePlayer (Main Ballroom)
+          }
+          else {
+            msg ("With the newly aquired Party Invitation you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Excuse me sir, you are not the man listed on this invitation. I am going to have to ask you to leave immediately\"<br/><br/>You will not be able to enter the Party like this. If only you had an invitation with your name on it.")
+          }
         }
         else {
           msg ("You cannot enter the party without an invitation")
         }
-      </script>
+      ]]></script>
     </exit>
   </object>
   <object name="Main Ballroom">

@@ -45,6 +45,10 @@
       <inherit name="editor_player" />
       <statusattributes type="stringdictionary" />
       <hasPartyInvitation type="boolean">false</hasPartyInvitation>
+      <hasCoatTicket type="boolean">false</hasCoatTicket>
+      <hasOwnCoat />
+      <knowsCoatGuardName type="boolean">false</knowsCoatGuardName>
+      <knowsVaultLastDigit type="boolean">false</knowsVaultLastDigit>
       <object name="Shkruesiverita">
         <inherit name="editor_object" />
         <look>The Shkruesiverita is a powerful tool used to alter any text in the world. This tool is what your ancestors used to rise to power. Though thought lost to time, it has found its way to your hands. Use this tool to help navigate, manipulate, and stealth your way through the party to get to the vault and restore your family's status.</look>
@@ -54,6 +58,8 @@
         </inventoryverbs>
         <drop type="boolean">false</drop>
         <feature_usegive />
+        <use />
+        <givesingle />
         <selfuseon type="scriptdictionary">
           <item key="Party Invitation">
             if (Party Invitation.changedName) {
@@ -64,9 +70,25 @@
               msg ("You alter the text on the Party Invitation to show your name, Dinak Forger")
             }
           </item>
+          <item key="Coat Ticket">
+            if (player.knowsCoatGuardName) {
+              msg ("You alter the text of the Coat Ticket to show 'Marco Romano'")
+              set (Coat Ticket, "altered", true)
+            }
+            else {
+              msg ("You don't know what to change the text to")
+            }
+          </item>
         </selfuseon>
-        <use />
-        <givesingle />
+      </object>
+      <object name="Coat">
+        <inherit name="editor_object" />
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+        </inventoryverbs>
+        <look>Your coat.</look>
+        <drop type="boolean">false</drop>
       </object>
     </object>
     <object name="Test Threat Increaser">
@@ -120,7 +142,7 @@
       <attr name="feature_usegive" type="boolean">false</attr>
       <lookedAt type="boolean">false</lookedAt>
       <look type="script">
-        msg ("You see a well-dressed nobleman swaying on his feet. His mask is crooked on his face. He is holding a glass of champagne and has clearly had too much to drink. In his pocket, barely staying inside of it, you see what appears to be an invitation to the party.")
+        msg ("You see a well-dressed nobleman swaying on his feet. His mask is crooked on his face. He has very cleary had too much to drink. In his pocket, barely staying inside of it, you see what appears to be an invitation to the party.")
         set (Drunk Nobleman, "lookedAt", true)
       </look>
       <speak type="script"><![CDATA[
@@ -187,6 +209,9 @@
         <value>Use</value>
         <value>Give</value>
       </inventoryverbs>
+      <use />
+      <givesingle />
+      <givemenuprompt type="string"></givemenuprompt>
       <giveto type="scriptdictionary">
         <item key="Drunk Nobleman"><![CDATA[
           msg ("You give him the Champagne Bottle<br/><br/>Drunk Nobleman: \"moRe CHampAgnE? ... I can'T saY nO to thaT ...\"<br/><br/>He gladly accepts the champagne and is completely distracted by it.")
@@ -194,9 +219,6 @@
           MoveObject (Champagne Bottle, Drunk Nobleman)
         ]]></item>
       </giveto>
-      <use />
-      <givesingle />
-      <givemenuprompt type="string"></givemenuprompt>
     </object>
     <exit name="Main Ballroom Exit" alias="north" to="Main Ballroom">
       <inherit name="northdirection" />
@@ -207,11 +229,11 @@
       <script type="script"><![CDATA[
         if (player.hasPartyInvitation) {
           if (Party Invitation.changedName) {
-            msg ("With the altered Party Invitation showing your name, you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Welcome to the Party Mr. Forger, I hope you enjoy the festivities\"<br/><br/>With that you have successfully made it into the Giusseppe estate.")
             MovePlayer (Main Ballroom)
           }
           else {
-            msg ("With the newly aquired Party Invitation you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Excuse me sir, you are not the man listed on this invitation. I am going to have to ask you to leave immediately\"<br/><br/>You will not be able to enter the Party like this. If only you had an invitation with your name on it.")
+            msg ("With the newly aquired Party Invitation you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Excuse me sir, I am familiar with the man listed on this invitation. You are not the man listed on this invitation. I am going to have to ask you to leave immediately\"<br/><br/>You quickly apologise and make a quick excuse saying you must have accidentally picked his up when conversing with him.<br/><br/>The guard just scoffs and tells you to leave.<br/><br/>(Threat Level Increased)<br/><br/>You will not be able to enter the Party like this. If only you had an invitation with your name on it.")
+            game.threat = game.threat + 15
           }
         }
         else {
@@ -222,6 +244,7 @@
     <object name="Woman">
       <inherit name="editor_object" />
       <inherit name="female" />
+      <lookedAt type="boolean">false</lookedAt>
       <speak type="script"><![CDATA[
         msg ("You decide to speak to the woman.")
         topics = Split ("What is your name;What is your profession;How do you know the host", ";")
@@ -251,11 +274,13 @@
           msg ("You havent looked at anything to steal from her.")
         }
       </steal>
-      <lookedAt type="boolean">false</lookedAt>
     </object>
   </object>
   <object name="Main Ballroom">
     <inherit name="editor_room" />
+    <firstenter type="script"><![CDATA[
+      msg ("With the altered Party Invitation showing your name, you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Welcome to the Party Mr. Forger, I hope you enjoy the festivities\"<br/><br/>With that you have successfully made it into the Giusseppe estate.")
+    ]]></firstenter>
     <exit alias="south" to="Entrance">
       <inherit name="southdirection" />
     </exit>
@@ -283,9 +308,110 @@
   </object>
   <object name="Coat Room">
     <inherit name="editor_room" />
+    <description>Next to the entrance to the ballroom there is a coatroom. Many of the guest's lavish and expensive clothing items are kept here.</description>
     <exit alias="northeast" to="Main Ballroom">
       <inherit name="northeastdirection" />
     </exit>
+    <object name="Attendant">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <look>You see an attendant at the coat check-in. She appears to be young and inexperienced. Maybe you can take advantage of her inexperience...</look>
+      <speak type="script"><![CDATA[
+        msg ("You walk up to the attendant at the coat check-in.")
+        topics = Split ("How is it going;I would like to get my coat back;I would like to check my coat in", ";")
+        ShowMenu ("What would you like to say?", topics, false) {
+          switch (result) {
+            case ("How is it going") {
+              msg ("Attendant: \"Fine, I suppose. There are so many guests here, I am a bit overwhelmed. I would not be able to keep track of all of them. It is a good thing we have these tickets to keep track of the guest's items.\"")
+            }
+            case ("I would like to get my coat back") {
+              if (player.hasCoatTicket) {
+                if (Coat Ticket.altered) {
+                  msg ("With the altered ticket you wait a while to make sure the attendant does not remember your face...<br/><br/>After some time you approach the desk and ask for 'your' coat back...<br/><br/>Attendant: \"May I have your ticket Signore?\"<br/><br/>You hand over the altered ticket.<br/><br/>Attendant: \"I will be right back with your Coat\"<br/><br/>She goes to check on the various coats in the back...<br/><br/>Attendant: \"Here you go Signore Romano\"<br/><br/>She hands over the coat.<br/><br/>You take the coat and the key to the dungeon out of the pocket.")
+                  AddToInventory (Guard Coat)
+                  AddToInventory (Key to Dungeon Prisoner)
+                }
+                else {
+                  msg ("You currently only have the ticket for your own coat. You have no need for it back. Another person's coat might be more helpful for your objective...")
+                }
+              }
+              else {
+                msg ("Attendant: \"May I have your ticket Signore?\"<br/><br/>You sheepishly explain that you do not have a ticket. You make an excuse that you must have misplaced it.<br/><br/>(Threat level increased)")
+                game.threat = game.threat + 5
+              }
+            }
+            case ("I would like to check my coat in") {
+              if (player.hasOwnCoat) {
+                msg ("You hand over you coat to the Attendant<br/><br/>Attendant: \"Here is your ticket to rectrieve your coat whenever you would like\"<br/><br/>She hands over the Coat Ticket")
+                AddToInventory (Coat Ticket)
+                set (player, "hasCoatTicket", true)
+                RemoveObject (Coat)
+                set (player, "hasOwnCoat", false)
+              }
+              else {
+                msg ("You don't have a coat you would like to hand over.")
+              }
+            }
+          }
+        }
+      ]]></speak>
+      <object name="Coat Ticket">
+        <inherit name="editor_object" />
+        <look>A ticket to retireve a coat from the coat-room.</look>
+        <scenery type="boolean">false</scenery>
+        <visible />
+        <altered type="boolean">false</altered>
+        <drop type="boolean">false</drop>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+        </inventoryverbs>
+        <listalias>Coat Ticket</listalias>
+        <take />
+        <feature_usegive />
+        <useon type="scriptdictionary">
+          <item key="Shkruesiverita">
+            if (player.knowsCoatGuardName) {
+              msg ("You alter the text of the Coat Ticket to show 'Marco Romano'")
+              set (Coat Ticket, "altered", true)
+            }
+            else {
+              msg ("You don't know what to change the text to")
+            }
+          </item>
+        </useon>
+      </object>
+      <object name="Key to Dungeon Prisoner">
+        <inherit name="editor_object" />
+        <visible />
+        <look>The key to the Dungeon Prisoner's Cell.</look>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+        </inventoryverbs>
+        <feature_usegive />
+        <drop type="boolean">false</drop>
+        <selfuseon type="scriptdictionary">
+          <item key="Dungeon Prisoner"><![CDATA[
+            msg ("You use the Dungeon Key to free the man.<br/><br/>Dungeon Prisoner: \"Thank you. I was starting to think I was going to be in there for a long, long time. I will keep my promise, the last digit for the vault combination is 3. I need to get out of here though. Let me take that Guard Coat so I can sneak out of here\"<br/><br/>You reluctantly give the coat over.<br/><br/>He quickly puts on the coat.<br/><br/>Dungeon Prisoner: \"Goodbye, I hope you can get into that vault to make Guido Giuseppe mad\"<br/><br/>He hurries off...")
+            RemoveObject (Guard Coat)
+            RemoveObject (Dungeon Prisoner)
+            set (player, "knowsVaultLastDigit", true)
+          ]]></item>
+        </selfuseon>
+        <use />
+      </object>
+      <object name="Guard Coat">
+        <inherit name="editor_object" />
+        <look>The coat of the guard who locked up the prisoner in the Dungeon.</look>
+        <visible />
+        <drop type="boolean">false</drop>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+          <value>Use</value>
+        </inventoryverbs>
+      </object>
+    </object>
   </object>
   <object name="Music Salon">
     <inherit name="editor_room" />
@@ -406,15 +532,157 @@
   </object>
   <object name="Canals Exit">
     <inherit name="editor_room" />
+    <description><![CDATA[In the back of the estate there is an exit to the canals. Travel by boat is commonplace in Venice after all. You can see various boats around this place.<br/><br/>You see a {object:Canals Guard} Standing near the edge of the canal.]]></description>
     <exit alias="southeast" to="Basement Main">
       <inherit name="southeastdirection" />
     </exit>
+    <object name="Canals Guard">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <speak type="script"><![CDATA[
+        if (game.threat > 40 and not this.distracted and not this.knockedOut) {
+          msg ("Your threat level is too high. Conversing with the guard will surely lead to trouble")
+        }
+        else if (this.distracted and not this.knockedOut) {
+          msg ("The guard is distracted. You shouldn't speak with him now.")
+        }
+        else if (this.knockedOut) {
+          msg ("He is knocked out. He cannot speak to you like this. ")
+        }
+        else {
+          topics = Split ("How are you doing;What is your name;Aren't you supposed to have a coat", ";")
+          ShowMenu ("What do you want to say?", topics, false) {
+            switch (result) {
+              case ("How are you doing") {
+                msg ("Guard: \"Fine. This party is very big and loud. I prefer the quiet here.\"<br/><br/>He puts the cigarette to his mouth...")
+              }
+              case ("What is your name") {
+                msg ("You introduce yourself and ask his name while extending a hand to shake.<br/><br/>Guard: \"I am Marco Romano\"<br/><br/>He shakes your hand")
+                set (player, "knowsCoatGuardName", true)
+              }
+              case ("Aren;t you supposed to have a coat") {
+                msg ("Canals Guard: \"I was taking a break in the party. I left it at the coat check-in. I suppose I forgot to get it\"")
+              }
+            }
+          }
+        }
+      ]]></speak>
+      <look type="script">
+        if (this.distracted) {
+          msg ("You see a guard looking over the edge of the canals to the water.  He is strangely missing his coat. He has a cigarette in his hand. He appears to also have a letter in his pocket.")
+        }
+        else if (this.knockedOut) {
+          msg ("The guard is knocked out.")
+        }
+        else {
+          msg ("You see a guard standing close to the edge of the water. He is strangely missing his coat. He is smoking a cigarette. He appears to also have a letter in his pocket.")
+        }
+        set (Canals Guard, "lookedAt", true)
+      </look>
+      <distracted type="boolean">false</distracted>
+      <steal type="script"><![CDATA[
+        if (this.lookedAt and not this.knockedOut) {
+          msg ("You see the letter in his pocket, but it would be too risky to try and steal it now.You will need to knock him out somehow...")
+        }
+        else if (this.lookedAt and this.knockedOut) {
+          msg ("You manage to take the letter he had.<br/><br/>It displays his name clearly, \"To Marco Romano\"<br/><br/>You get all the information you need so you carefully put the letter back in his pocket.")
+          set (player, "knowsCoatGuardName", true)
+        }
+        else if (not this.lookedAt and this.knockedOut) {
+          msg ("Your ruffle through the pockets of the Guard. In one of them you find a letter.<br/><br/>It displays his name clearly, \"To Marco Romano\"<br/><br/>You get all the information you need so you carefully put the letter back in his pocket.")
+        }
+        else {
+          msg ("You wouldn't know what to steal from him without looking at him. It would also be too risky to try and steal from a guard like this.")
+        }
+      ]]></steal>
+      <lookedAt type="boolean">false</lookedAt>
+      <knockedOut type="boolean">false</knockedOut>
+    </object>
+    <object name="Ball">
+      <inherit name="editor_object" />
+      <look>It is a ball used to play sports.</look>
+      <throw type="script">
+        msg ("You toss the ball into the water of the canals. The guard is distracted by the sound of the splashing water.")
+        set (Canals Guard, "distracted", true)
+      </throw>
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="Spare Boat Oar">
+      <inherit name="editor_object" />
+      <look>It is an oar used to ferry many of the boats around Venice. It is large and made out of wood. A sturdy tool that can knock someone out very easily.</look>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
+      <feature_usegive />
+      <selfuseon type="scriptdictionary">
+        <item key="Canals Guard"><![CDATA[
+          if (Canals Guard.distracted) {
+            msg ("You use the Spare Boat Oar to knock the Canals Guard out<br/><br/>He is knocked out cold, but he is still alive.")
+            set (Canals Guard, "knockedOut", true)
+          }
+          else {
+            msg ("It would be too risky to try and knock him out now. He would need to be distracted first.")
+          }
+        ]]></item>
+      </selfuseon>
+      <take type="boolean">false</take>
+      <takemsg>You pick on the Spare Boat oar</takemsg>
+      <ontake type="script">
+        AddToInventory (Spare Boat Oar)
+      </ontake>
+      <drop type="boolean">false</drop>
+      <use />
+    </object>
   </object>
   <object name="Dungeon">
     <inherit name="editor_room" />
+    <description><![CDATA[In the Basement of the Guisseppe Estate you find a Dungeon. This estate is clearly from times of old to have such a place. You have no doubt in your mind that countless people have found themselves in this very room for going against the Giusseppe Family. <br/><br/>The eerie nature of the room makes you cautious. There are some locked rooms.]]></description>
     <exit alias="northeast" to="Basement Main">
       <inherit name="northeastdirection" />
     </exit>
+    <object name="Dungeon Prisoner">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look>You see the man kept inside the dungeon room. You can see slight bruises on his arms. His coat is torn and battered. He appears to be a middle-aged man with a beard and unkempt hair. </look>
+      <speak type="script"><![CDATA[
+        msg ("You approach the Dungeon Prisoner")
+        topics = Split ("Are you ok;What is your name;Why are you in here", ";")
+        ShowMenu ("What do you want to ask?", topics, false) {
+          switch (result) {
+            case ("What is your name") {
+              msg ("Dungeon Prisoner: \"I am Antonio De Luca\"")
+            }
+            case ("Why are you in here") {
+              msg ("Dungeon Prisoner: \"I'm in here because I dared to go up against Guido Giusseppe.\"<br/><br/>He sighs...<br/><br/>Dungeon Prisoner: \"Guido Giusseppe is a corrupt monster who will do anything to stay in power. He was going to destroy my business and leave me in ruin. We used to be business partners, before I realized his corruptness and thirst for power. I heard he was hosting this party and came to confront him. He did not care at all. He ordered one of his men to send me down here, and here I am. I know a few of his secrets. Perhaps that is why I am down here.\"<br/><br/>You feel a sense of sympathy for this man.<br/><br/>You might want to ask what secrets he knows...")
+              set (Dungeon Prisoner, "askedWhyHere", true)
+            }
+            case ("Are you ok") {
+              msg ("Duneon Prisoner: \"I am in quite a bit of pain after the guards subdued me. I did not go down without a fight. I just want to get out of here and go home.\"")
+            }
+          }
+        }
+        if (this.askedWhyHere) {
+          unlockedOptions = Split ("What secrets do you know;", ";")
+          ShowMenu ("Unlocked Dialogue Options:", unlockedOptions, false) {
+            switch (result) {
+              case ("What secrets do you know") {
+                msg ("Dungeon Prisoner: \"I know the corrupt actions he has taken to rise to power. I know where he likes to visit and the people he speaks to. Nothing of use I suppose... Though I do know a digit for the combination of that Vault you might have seen. I was down here with him before and a managed to catch a glimpse. I can tell you it if you help get me out of here.\"<br/><br/>You are intrigued...<br/><br/>Dungeon Prisoner: \"The guard that put me in here left the key inside the pocket of his coat. He also mentioned he was taking a break to linger around the party. Though I think I heard him near here somewhere. He can get quite loud. Maybe you can get that key somehow?\"")
+              }
+            }
+          }
+        }
+      ]]></speak>
+      <askedWhyHere type="boolean">false</askedWhyHere>
+      <isFree type="boolean">false</isFree>
+    </object>
   </object>
   <object name="Vault Room">
     <inherit name="editor_room" />

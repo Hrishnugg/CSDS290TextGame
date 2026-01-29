@@ -17,11 +17,11 @@
     <autodescription_youarein_newline />
     <subtitle>A Stealth, Manipulation, and Infiltration Text Adventure Game</subtitle>
     <author>Stephan Jamet, Ares Kittell, Hrishikesh Hari, and Roberto Matthews</author>
+    <guardTimer type="int">3</guardTimer>
     <start type="script"><![CDATA[
       game.threat = 0
       msg ("Venice, Italy 1951. <br/><br/>Your name is Dinak Forger, a former Italian nobleman. In 1947 your family was stripped of their nobility status by the ruthless actions of Italian business mogul Guido Giuseppe. Through shady business practices and corruption, Giusseppe has managed to falsify and produce documents to ruin the Forger family’s name, and claim ultimate power over the Italian business scene. <br/><br/>While Giusseppe has won the battle that leading to the demise of your family's legacy, the Forger's story does not end here. You have spent the last four years sturggling to make ends meet. As a result you have resorted to theivery and manipulation in order to survive. <br/><br/>Three years after the demise of your family's name you have uncovered the tool that directly led to the Forger family’s rise to power, the Shkruesiverita.The Shkruesiverita is a powerful pencil that allows the writer to alter any text in the world, be it signs, texts etched in stone, and most importantly to you, legal and business documents to restore your family’s status.<br/><br/>In order to do this, you must find a way into the Giuseppe estate, break into the secured vault, and use the Shkruesiverita to delegitimize the documents responsible for the collapse of your family. Luckily for you, Giusseppe, in his extravagance and narcissism, is holding what is being dubbed \"The Party of the Century” after his rise to the peak of Italian business. This masquerade party presents you with an opportunity to use his skills as a thief, and more importantly the Shkruesiverita, to sneak and manipulate his way through the party and security to get to the Giuseppe Estate’s vault. You will have to deal with the other guests of European nobility, guards and security, and Guido Giusseppe himself to puzzle your way through to the vault. <br/>")
     ]]></start>
-    <guardTimer type="int">3</guardTimer>
     <roomenter type="script">
       if (game.threat = 10) {
         msg ("You are being pursued by guards.")
@@ -160,11 +160,7 @@
       <attr name="feature_usegive" type="boolean">false</attr>
       <lookedAt type="boolean">false</lookedAt>
       <look type="script">
-<<<<<<< HEAD
-        msg ("You see a well-dressed nobleman swaying on his feet. His mask is crooked on his face. He is holding a glass of champagne and has clearly had too much to drink. In his pocket, barely staying inside of it, you see what appears to be an invitation to the party.")
-=======
         msg ("You see a well-dressed nobleman swaying on his feet. His mask is crooked on his face. He has very cleary had too much to drink. In his pocket, barely staying inside of it, you see what appears to be an invitation to the party.")
->>>>>>> 14634cedbb75e5fc97d9ba974618da4206ff78cc
         set (Drunk Nobleman, "lookedAt", true)
       </look>
       <speak type="script"><![CDATA[
@@ -231,7 +227,7 @@
         <value>Use</value>
         <value>Give</value>
       </inventoryverbs>
-      <use />
+      <use type="boolean">false</use>
       <givesingle />
       <givemenuprompt type="string"></givemenuprompt>
       <giveto type="scriptdictionary">
@@ -241,7 +237,6 @@
           MoveObject (Champagne Bottle, Drunk Nobleman)
         ]]></item>
       </giveto>
-      <use type="boolean">false</use>
     </object>
     <exit name="Main Ballroom Exit" alias="north" to="Main Ballroom">
       <inherit name="northdirection" />
@@ -256,7 +251,7 @@
           }
           else {
             msg ("With the newly aquired Party Invitation you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Excuse me sir, I am familiar with the man listed on this invitation. You are not the man listed on this invitation. I am going to have to ask you to leave immediately\"<br/><br/>You quickly apologise and make a quick excuse saying you must have accidentally picked his up when conversing with him.<br/><br/>The guard just scoffs and tells you to leave.<br/><br/>(Threat Level Increased)<br/><br/>You will not be able to enter the Party like this. If only you had an invitation with your name on it.")
-            game.threat = game.threat + 15
+            game.threat = game.threat + 1
           }
         }
         else {
@@ -414,6 +409,7 @@
         </inventoryverbs>
         <feature_usegive />
         <drop type="boolean">false</drop>
+        <use />
         <selfuseon type="scriptdictionary">
           <item key="Dungeon Prisoner"><![CDATA[
             msg ("You use the Dungeon Key to free the man.<br/><br/>Dungeon Prisoner: \"Thank you. I was starting to think I was going to be in there for a long, long time. I will keep my promise, the last digit for the vault combination is 3. I need to get out of here though. Let me take that Guard Coat so I can sneak out of here\"<br/><br/>You reluctantly give the coat over.<br/><br/>He quickly puts on the coat.<br/><br/>Dungeon Prisoner: \"Goodbye, I hope you can get into that vault to make Guido Giuseppe mad\"<br/><br/>He hurries off...")
@@ -422,7 +418,6 @@
             set (player, "knowsVaultLastDigit", true)
           ]]></item>
         </selfuseon>
-        <use />
       </object>
       <object name="Guard Coat">
         <inherit name="editor_object" />
@@ -454,6 +449,7 @@
   <object name="Ballroom Second Floor">
     <inherit name="editor_room" />
     <isHostile />
+    <description>The upstairs ballroom is crowded with people, with many touring the various bedrooms.</description>
     <enter type="script"><![CDATA[
       if (Got(Shining Key) and this.isHostile) {
         msg ("As you walk into the ballroom, people begin to take notice to the bright light emitted from your pocket. One of the guests approaches you.")
@@ -490,7 +486,6 @@
         this.isHostile = false
       }
     ]]></enter>
-    <description>The upstairs ballroom is crowded with people, with many touring the various bedrooms.</description>
     <exit alias="down" to="Main Ballroom">
       <inherit name="downdirection" />
     </exit>
@@ -507,6 +502,7 @@
       <inherit name="southdirection" />
       <locked type="boolean">false</locked>
       <runscript />
+      <isOpened type="boolean">false</isOpened>
       <script type="script">
         if (Got(Shining Key) or this.isOpened) {
           msg ("As you open the door, the people around you realize that you are an intruder")
@@ -519,7 +515,6 @@
           msg ("The door is locked")
         }
       </script>
-      <isOpened type="boolean">false</isOpened>
     </exit>
     <exit alias="southeast" to="Lounge">
       <inherit name="southeastdirection" />
@@ -584,6 +579,10 @@
     </object>
     <object name="Books">
       <inherit name="editor_object" />
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
       <look type="script"><![CDATA[
         msg ("You see a number of books spread out along the shelves, free to be taken and read.")
         topics = Split ("Read green book;Read blue book;Read red book;Walk away", ";")
@@ -611,10 +610,6 @@
           }
         }
       ]]></look>
-      <useindividualverblist type="boolean">false</useindividualverblist>
-      <displayverbs type="stringlist">
-        <value>Look at</value>
-      </displayverbs>
     </object>
     <object name="Secret Passage">
       <inherit name="editor_object" />
@@ -639,6 +634,7 @@
       <inherit name="eastdirection" />
       <locked type="boolean">false</locked>
       <runscript />
+      <isOpened type="boolean">false</isOpened>
       <script type="script">
         if (Got(Shining Key) or this.isOpened) {
           this.isOpened = true
@@ -649,7 +645,6 @@
           msg ("The door is locked")
         }
       </script>
-      <isOpened type="boolean">false</isOpened>
     </exit>
   </object>
   <object name="Master Bedroom">
@@ -722,8 +717,11 @@
     <object name="Canals Guard">
       <inherit name="editor_object" />
       <inherit name="male" />
+      <distracted type="boolean">false</distracted>
+      <lookedAt type="boolean">false</lookedAt>
+      <knockedOut type="boolean">false</knockedOut>
       <speak type="script"><![CDATA[
-        if (game.threat > 40 and not this.distracted and not this.knockedOut) {
+        if (game.threat > 4 and not this.distracted and not this.knockedOut) {
           msg ("Your threat level is too high. Conversing with the guard will surely lead to trouble")
         }
         else if (this.distracted and not this.knockedOut) {
@@ -762,7 +760,6 @@
         }
         set (Canals Guard, "lookedAt", true)
       </look>
-      <distracted type="boolean">false</distracted>
       <steal type="script"><![CDATA[
         if (this.lookedAt and not this.knockedOut) {
           msg ("You see the letter in his pocket, but it would be too risky to try and steal it now.You will need to knock him out somehow...")
@@ -778,16 +775,10 @@
           msg ("You wouldn't know what to steal from him without looking at him. It would also be too risky to try and steal from a guard like this.")
         }
       ]]></steal>
-      <lookedAt type="boolean">false</lookedAt>
-      <knockedOut type="boolean">false</knockedOut>
     </object>
     <object name="Ball">
       <inherit name="editor_object" />
       <look>It is a ball used to play sports.</look>
-      <throw type="script">
-        msg ("You toss the ball into the water of the canals. The guard is distracted by the sound of the splashing water.")
-        set (Canals Guard, "distracted", true)
-      </throw>
       <drop type="boolean">false</drop>
       <inventoryverbs type="stringlist">
         <value>Look at</value>
@@ -796,6 +787,10 @@
       <displayverbs type="stringlist">
         <value>Look at</value>
       </displayverbs>
+      <throw type="script">
+        msg ("You toss the ball into the water of the canals. The guard is distracted by the sound of the splashing water.")
+        set (Canals Guard, "distracted", true)
+      </throw>
     </object>
     <object name="Spare Boat Oar">
       <inherit name="editor_object" />
@@ -805,6 +800,13 @@
         <value>Use</value>
       </inventoryverbs>
       <feature_usegive />
+      <take type="boolean">false</take>
+      <takemsg>You pick on the Spare Boat oar</takemsg>
+      <drop type="boolean">false</drop>
+      <use />
+      <ontake type="script">
+        AddToInventory (Spare Boat Oar)
+      </ontake>
       <selfuseon type="scriptdictionary">
         <item key="Canals Guard"><![CDATA[
           if (Canals Guard.distracted) {
@@ -816,13 +818,6 @@
           }
         ]]></item>
       </selfuseon>
-      <take type="boolean">false</take>
-      <takemsg>You pick on the Spare Boat oar</takemsg>
-      <ontake type="script">
-        AddToInventory (Spare Boat Oar)
-      </ontake>
-      <drop type="boolean">false</drop>
-      <use />
     </object>
   </object>
   <object name="Dungeon">
@@ -835,6 +830,8 @@
       <inherit name="editor_object" />
       <inherit name="male" />
       <look>You see the man kept inside the dungeon room. You can see slight bruises on his arms. His coat is torn and battered. He appears to be a middle-aged man with a beard and unkempt hair. </look>
+      <askedWhyHere type="boolean">false</askedWhyHere>
+      <isFree type="boolean">false</isFree>
       <speak type="script"><![CDATA[
         msg ("You approach the Dungeon Prisoner")
         topics = Split ("Are you ok;What is your name;Why are you in here", ";")
@@ -863,8 +860,6 @@
           }
         }
       ]]></speak>
-      <askedWhyHere type="boolean">false</askedWhyHere>
-      <isFree type="boolean">false</isFree>
     </object>
   </object>
   <object name="Vault Room">

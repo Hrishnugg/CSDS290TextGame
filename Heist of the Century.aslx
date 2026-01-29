@@ -21,6 +21,24 @@
       game.threat = 0
       msg ("Venice, Italy 1951. <br/><br/>Your name is Dinak Forger, a former Italian nobleman. In 1947 your family was stripped of their nobility status by the ruthless actions of Italian business mogul Guido Giuseppe. Through shady business practices and corruption, Giusseppe has managed to falsify and produce documents to ruin the Forger family’s name, and claim ultimate power over the Italian business scene. <br/><br/>While Giusseppe has won the battle that leading to the demise of your family's legacy, the Forger's story does not end here. You have spent the last four years sturggling to make ends meet. As a result you have resorted to theivery and manipulation in order to survive. <br/><br/>Three years after the demise of your family's name you have uncovered the tool that directly led to the Forger family’s rise to power, the Shkruesiverita.The Shkruesiverita is a powerful pencil that allows the writer to alter any text in the world, be it signs, texts etched in stone, and most importantly to you, legal and business documents to restore your family’s status.<br/><br/>In order to do this, you must find a way into the Giuseppe estate, break into the secured vault, and use the Shkruesiverita to delegitimize the documents responsible for the collapse of your family. Luckily for you, Giusseppe, in his extravagance and narcissism, is holding what is being dubbed \"The Party of the Century” after his rise to the peak of Italian business. This masquerade party presents you with an opportunity to use his skills as a thief, and more importantly the Shkruesiverita, to sneak and manipulate his way through the party and security to get to the Giuseppe Estate’s vault. You will have to deal with the other guests of European nobility, guards and security, and Guido Giusseppe himself to puzzle your way through to the vault. <br/>")
     ]]></start>
+    <guardTimer type="int">3</guardTimer>
+    <roomenter type="script">
+      if (game.threat = 10) {
+        msg ("You are being pursued by guards.")
+        msg ("You have 2 actions before the guards catch up.")
+        game.guardTimer = 3
+      }
+    </roomenter>
+    <object name="Shining Key">
+      <inherit name="editor_object" />
+      <look>A shining key, quite hard to hide from anyone looking at you.</look>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
+      <drop type="boolean">false</drop>
+      <take />
+    </object>
   </game>
   <object name="test room">
     <inherit name="editor_room" />
@@ -102,12 +120,13 @@
     <object name="Drunk Nobleman">
       <inherit name="editor_object" />
       <inherit name="male" />
+      <isDistracted type="boolean">false</isDistracted>
+      <attr name="feature_usegive" type="boolean">false</attr>
+      <lookedAt type="boolean">false</lookedAt>
       <look type="script">
         msg ("You see a well-dressed nobleman swaying on his feet. His mask is crooked on his face. He is holding a glass of champagne and has clearly had too much to drink. In his pocket, barely staying inside of it, you see what appears to be an invitation to the party.")
         set (Drunk Nobleman, "lookedAt", true)
       </look>
-      <isDistracted type="boolean">false</isDistracted>
-      <attr name="feature_usegive" type="boolean">false</attr>
       <speak type="script"><![CDATA[
         msg ("You approach the nobleman He squints at you, barely able to focus.")
         topics = Split ("Are you ok;What is your name;How's the party", ";")
@@ -149,7 +168,6 @@
           msg ("You don't know what to steal from him. You might need to look closer at him.")
         }
       </steal>
-      <lookedAt type="boolean">false</lookedAt>
       <object name="Party Invitation">
         <inherit name="editor_object" />
         <look>A coveted invitation to Guido Giusseppe's 'Party of the Century'. The elites and nobles of Europe all wish to recieve one. It is stamped with the Giusseppe family seal.</look>
@@ -170,6 +188,7 @@
           MoveObject (Champagne Bottle, Drunk Nobleman)
         ]]></item>
       </giveto>
+      <use type="boolean">false</use>
     </object>
     <exit name="Main Ballroom Exit" alias="north" to="Main Ballroom">
       <inherit name="northdirection" />
@@ -237,6 +256,44 @@
   </object>
   <object name="Ballroom Second Floor">
     <inherit name="editor_room" />
+    <isHostile />
+    <enter type="script"><![CDATA[
+      if (Got(Shining Key) and this.isHostile) {
+        msg ("As you walk into the ballroom, people begin to take notice to the bright light emitted from your pocket. One of the guests approaches you.")
+        topics = Split ("I have a bomb;I ate the Sun;It's my magic watch;Stay silent", ";")
+        ShowMenu ("\"What is that in your pocket good sir?\"", topics, false) {
+          switch (result) {
+            case ("I have a bomb") {
+              msg ("You now have guards chasing after you. You have 2 actions before they grab you.")
+              game.threat = 10
+            }
+            case ("I ate the Sun") {
+              msg ("\"... Okay.\"")
+              game.threat = game.threat + 3
+              if (game.threat >= 10) {
+                msg ("You now have guards chasing after you. You have 2 actions before they grab you.")
+              }
+            }
+            case ("It's my magic watch") {
+              msg ("\"Oh okay then.\"")
+              game.threat = game.threat + 1
+              if (game.threat >= 10) {
+                msg ("You now have guards chasing after you. You have 2 actions before they grab you.")
+              }
+            }
+            case ("Stay silent") {
+              msg ("\"...\"")
+              game.threat = game.threat + 3
+              if (game.threat >= 10) {
+                msg ("You now have guards chasing after you. You have 2 actions before they grab you.")
+              }
+            }
+          }
+        }
+        this.isHostile = false
+      }
+    ]]></enter>
+    <description>The upstairs ballroom is crowded with people, with many touring the various bedrooms.</description>
     <exit alias="down" to="Main Ballroom">
       <inherit name="downdirection" />
     </exit>
@@ -249,8 +306,23 @@
     <exit alias="southwest" to="Bathroom">
       <inherit name="southwestdirection" />
     </exit>
-    <exit alias="south" to="Master Bedroom">
+    <exit name="Master Bedroom Ballroom Entrance" alias="south" to="Master Bedroom">
       <inherit name="southdirection" />
+      <locked type="boolean">false</locked>
+      <runscript />
+      <script type="script">
+        if (Got(Shining Key) or this.isOpened) {
+          msg ("As you open the door, the people around you realize that you are an intruder")
+          game.threat = 10
+          this.isOpened = true
+          RemoveObject (Shining Key)
+          MovePlayer (Master Bedroom)
+        }
+        else {
+          msg ("The door is locked")
+        }
+      </script>
+      <isOpened type="boolean">false</isOpened>
     </exit>
     <exit alias="southeast" to="Lounge">
       <inherit name="southeastdirection" />
@@ -282,21 +354,128 @@
   </object>
   <object name="Study">
     <inherit name="editor_room" />
+    <description>A study, crowded with guests.</description>
     <exit alias="east" to="Ballroom Second Floor">
       <inherit name="eastdirection" />
     </exit>
+    <object name="Poster">
+      <inherit name="editor_object" />
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look>A poster showcasing the times of various events occuring during the party. There is a speech being held later later into the night by the host himself.</look>
+      <isDistracted type="boolean">false</isDistracted>
+      <rewrite type="script">
+        msg ("You rewrite the time of the host's speech to be in only a couple of minutes. As the guests in the room take notice, they begin to leave, heading for the ballroom.")
+        set (Poster, "isDistracted", true)
+        RemoveObject (Poster)
+      </rewrite>
+    </object>
+    <object name="Potted Plant">
+      <inherit name="editor_object" />
+      <lookunder type="script">
+        if (Poster.isDistracted) {
+          AddToInventory (Shining Key)
+          msg ("There was a shiny key underneath the potted plant. It would be hard to hide from people looking at you.")
+          this.isDistracted = false
+        }
+        else {
+          msg ("It would be suspicious to do so while people are nearby.")
+        }
+      </lookunder>
+    </object>
+    <object name="Books">
+      <inherit name="editor_object" />
+      <look type="script"><![CDATA[
+        msg ("You see a number of books spread out along the shelves, free to be taken and read.")
+        topics = Split ("Read green book;Read blue book;Read red book;Walk away", ";")
+        ShowMenu ("What would you like to do?", topics, false) {
+          switch (result) {
+            case ("Read green book") {
+              msg ("A novel on the design of set-pieces, how meaningless details can contribute to the stories they take part in.")
+            }
+            case ("Read blue book") {
+              msg ("A book on better ways to spend your time, encouraging meaningful hobbies and better time management skills.")
+            }
+            case ("Read red book") {
+              msg ("You hear something move as you pick up the book, and as you skim the pages, you notice it is entirely blank.")
+              set (Secret Passage, "visible", true)
+              if (Poster.isDistracted = false) {
+                game.threat = game.threat + 2
+                if (game.threat >= 10) {
+                  msg ("You now have guards chasing after you. You have 2 actions before they grab you.")
+                }
+              }
+            }
+            case ("Walk away") {
+              msg ("You walk away.")
+            }
+          }
+        }
+      ]]></look>
+      <useindividualverblist type="boolean">false</useindividualverblist>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+    </object>
+    <object name="Secret Passage">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>A small, narrow passage looking directly into the bathroom on the other side. You question the intent of installing such a thing.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <putitemthrough type="scriptdictionary">
+        <item key="Shining Key">
+          MoveObject (Shining Key, Bathroom)
+        </item>
+      </putitemthrough>
+    </object>
   </object>
   <object name="Bathroom">
     <inherit name="editor_room" />
     <exit alias="northeast" to="Ballroom Second Floor">
       <inherit name="northeastdirection" />
     </exit>
+    <exit name="Master Bedroom Entrance" alias="east" to="Master Bedroom">
+      <inherit name="eastdirection" />
+      <locked type="boolean">false</locked>
+      <runscript />
+      <script type="script">
+        if (Got(Shining Key) or this.isOpened) {
+          this.isOpened = true
+          MovePlayer (Master Bedroom)
+          RemoveObject (Shining Key)
+        }
+        else {
+          msg ("The door is locked")
+        }
+      </script>
+      <isOpened type="boolean">false</isOpened>
+    </exit>
   </object>
   <object name="Master Bedroom">
     <inherit name="editor_room" />
     <exit alias="north" to="Ballroom Second Floor">
       <inherit name="northdirection" />
+      <locked type="boolean">false</locked>
+      <runscript />
+      <script type="script"><![CDATA[
+        if (game.threat < 10) {
+          msg ("As you open the door, you reveal yourself to everyone in the ballroom, and they realize that you are an intruder.")
+          game.threat = 10
+        }
+        MovePlayer (Ballroom Second Floor)
+      ]]></script>
     </exit>
+    <exit alias="west" to="Bathroom">
+      <inherit name="westdirection" />
+    </exit>
+    <object name="Bedside Desk">
+      <inherit name="editor_object" />
+      <look>You search the desk, and find a piece of paper neatly folded underneath a lamp. It has the letter "M" written on it.</look>
+    </object>
   </object>
   <object name="Lounge">
     <inherit name="editor_room" />
@@ -360,4 +539,39 @@
     <pattern>steal</pattern>
     <defaultexpression>WriteVerb(game.pov, "can't") + " steal " + object.article + "."</defaultexpression>
   </verb>
+  <verb>
+    <property>lookunder</property>
+    <pattern>look under</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " look under " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>rewrite</property>
+    <pattern>rewrite</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " rewrite " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>putshinykeythrough</property>
+    <pattern>put shiny key through</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " put shiny key through " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>putitemthrough</property>
+    <pattern>put item through</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " put item through " + object.article + "."</defaultexpression>
+  </verb>
+  <turnscript name="Guard Check">
+    <enabled />
+    <script>
+      if (game.threat = 10) {
+        if (game.guardTimer = 0) {
+          undo
+          msg ("The guards would catch you if you stayed any longer")
+        }
+        else {
+          game.guardTimer = game.guardTimer - 1
+          msg ("You have " + game.guardTimer + " turn(s) left")
+        }
+      }
+    </script>
+  </turnscript>
 </asl>

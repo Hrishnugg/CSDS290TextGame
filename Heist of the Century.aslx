@@ -454,7 +454,7 @@
   <object name="Ballroom Second Floor">
     <inherit name="editor_room" />
     <isHostile />
-    <description>The upstairs ballroom is crowded with people, with many touring the various bedrooms.</description>
+    <description>The Giusseppe estate has a second floor to it with another ballroom. It's expensive decorations line the walls, ceiling, and floor. The upstairs ballroom is crowded with people, with many touring the various bedrooms.</description>
     <enter type="script"><![CDATA[
       if (Got(Shining Key) and this.isHostile) {
         msg ("As you walk into the ballroom, people begin to take notice to the bright light emitted from your pocket. One of the guests approaches you.")
@@ -551,7 +551,7 @@
   </object>
   <object name="Study">
     <inherit name="editor_room" />
-    <description>A study, crowded with guests.</description>
+    <description>A study, crowded with guests. Bookshelves line the walls of this study.</description>
     <exit alias="east" to="Ballroom Second Floor">
       <inherit name="eastdirection" />
     </exit>
@@ -632,6 +632,7 @@
   </object>
   <object name="Bathroom">
     <inherit name="editor_room" />
+    <description><![CDATA[The Bathroom of the Giuseppe estate's second floor. Even for such a room there are many expensive items and decorations around. <br/><br/>This room also appears to be connected to the Master Bedroom of this estate...]]></description>
     <exit alias="northeast" to="Ballroom Second Floor">
       <inherit name="northeastdirection" />
     </exit>
@@ -913,6 +914,7 @@
   </object>
   <object name="Vault Room">
     <inherit name="editor_room" />
+    <description><![CDATA[The Vault Room of the Giusseppe estate. It has many prized possesions that are worth millions alone. <br/><br/>You are only here to get the documents that ruined your family name and deligitemize their contents.]]></description>
     <exit alias="north" to="Basement Main">
       <inherit name="northdirection" />
     </exit>

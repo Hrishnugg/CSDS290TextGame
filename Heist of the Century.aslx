@@ -67,6 +67,7 @@
       <hasOwnCoat />
       <knowsCoatGuardName type="boolean">false</knowsCoatGuardName>
       <knowsVaultLastDigit type="boolean">false</knowsVaultLastDigit>
+      <knowsVaultFirstDigit type="boolean">false</knowsVaultFirstDigit>
       <object name="Shkruesiverita">
         <inherit name="editor_object" />
         <look>The Shkruesiverita is a powerful tool used to alter any text in the world. This tool is what your ancestors used to rise to power. Though thought lost to time, it has found its way to your hands. Use this tool to help navigate, manipulate, and stealth your way through the party to get to the vault and restore your family's status.</look>
@@ -97,6 +98,10 @@
               msg ("You don't know what to change the text to")
             }
           </item>
+          <item key="Forger Family Documents"><![CDATA[
+            msg ("With the Forger Family Documents finally aquired, you carefully read the contents of them.<br/><br/>You see the lies Guido Giusseppe has spread and the corrupt actions he has taken to lead your family to ruin.<br/><br/>With the Shkruesiverita you go though each document altering their contents...<br/><br/>These documents now have no hold over your family.<br/><br/>In the coming days you challenge Guido Giusseppe's legal victories over your family. Through your appeals, the altered documents are presented in a fair court far from Guido Giuseppe's corrupt hands. The contents of the documents are clearly false and fabricated. You win the case easily. Guido Giuseppe is ordered to pay recompense to your family. In the following months your family's status is restored.<br/><br/>You have completed your objective.")
+            finish
+          ]]></item>
         </selfuseon>
       </object>
       <object name="Coat">
@@ -340,7 +345,7 @@
         ShowMenu ("What would you like to say?", topics, false) {
           switch (result) {
             case ("How is it going") {
-              msg ("Attendant: \"Fine, I suppose. There are so many guests here, I am a bit overwhelmed. I would not be able to keep track of all of them. It is a good thing we have these tickets to keep track of the guest's items.\"")
+              msg ("Attendant: \"Fine, I suppose. There are so many guests here, I am a bit overwhelmed. I would not be able to keep track of all of them. I am not very good at remembering people's names or faces. It is a good thing we have these tickets to keep track of the guest's items.\"")
             }
             case ("I would like to get my coat back") {
               if (player.hasCoatTicket) {
@@ -355,12 +360,12 @@
               }
               else {
                 msg ("Attendant: \"May I have your ticket Signore?\"<br/><br/>You sheepishly explain that you do not have a ticket. You make an excuse that you must have misplaced it.<br/><br/>(Threat level increased)")
-                game.threat = game.threat + 5
+                game.threat = game.threat + 1
               }
             }
             case ("I would like to check my coat in") {
               if (player.hasOwnCoat) {
-                msg ("You hand over you coat to the Attendant<br/><br/>Attendant: \"Here is your ticket to rectrieve your coat whenever you would like\"<br/><br/>She hands over the Coat Ticket")
+                msg ("You hand over you coat to the Attendant<br/><br/>Attendant: \"Thank you Signore. What is your name to retrieve your coat?\"<br/><br/>You respond saying \"Dinak Forger\"<br/><br/>Attendant: \"Here is your ticket to retrieve your coat whenever you would like\"<br/><br/>She hands over the Coat Ticket")
                 AddToInventory (Coat Ticket)
                 set (player, "hasCoatTicket", true)
                 RemoveObject (Coat)
@@ -666,7 +671,10 @@
     </exit>
     <object name="Bedside Desk">
       <inherit name="editor_object" />
-      <look>You search the desk, and find a piece of paper neatly folded underneath a lamp. It has the letter "M" written on it.</look>
+      <look type="script">
+        msg ("You search the desk, and find a piece of paper neatly folded underneath a lamp. It has \"First: 5\" written on it.")
+        set (player, "knowsVaultFirstDigit", true)
+      </look>
     </object>
   </object>
   <object name="Lounge">
@@ -706,6 +714,47 @@
     </exit>
     <exit alias="south" to="Vault Room">
       <inherit name="southdirection" />
+      <locked type="boolean">false</locked>
+      <runscript />
+      <script type="script"><![CDATA[
+        msg ("You approach the Vault Door. It is tightly closed and sealed. To the side is a ten digit number pad with four spaces for the input.")
+        topics = Split ("1234;2839;4539;5283;5478", ";")
+        ShowMenu ("What combination do you want to try", topics, false) {
+          switch (result) {
+            case ("1234") {
+              msg ("You attempt to put in the combination 1-2-3-4...<br/><br/>You hear an incorrect sounding buzzer beep ring somewhat loudly. <br/><br/>(Threat Increased)")
+              game.threat = game.threat + 3
+            }
+            case ("2839") {
+              msg ("You attempt to put in the combination 2-8-3-9<br/><br/>You hear an incorrect sounding buzzer beep ring somewhat loudly. <br/><br/>(Threat Increased)")
+              game.threat = game.threat + 3
+            }
+            case ("4539") {
+              msg ("You attempt to put in the combination 4-5-3-9...<br/><br/>You hear an incorrect sounding buzzer beep ring somewhat loudly. <br/><br/>(Threat Increased)")
+              game.threat = game.threat + 3
+            }
+            case ("5283") {
+              msg ("You attempt to put in the combination 5-2-8-3...<br/><br/>You hear an incorrect sounding buzzer beep ring somewhat loudly. <br/><br/>(Threat Increased)")
+              game.threat = game.threat + 3
+            }
+            case ("5478") {
+              msg ("You attempt to put in the combination 1-2-3-4...<br/><br/>You hear an incorrect sounding buzzer beep ring somewhat loudly. <br/><br/>(Threat Increased)")
+              game.threat = game.threat + 3
+            }
+          }
+        }
+        if (player.knowsVaultFirstDigit and player.knowsVaultLastDigit) {
+          unlockedoptions = Split ("5723", ";")
+          ShowMenu ("Unlocked Option:", unlockedoptions, false) {
+            switch (result) {
+              case ("5723") {
+                msg ("You attempt to put in the combination 5-7-2-3..<br/><br/>You hear a correct sounding buzzer beep followed by a clicking sound... <br/><br/>You turn the handle on the vault door and pull it open<br/><br/>You have successfully made it into the Giuseppe estate's coveted vault")
+                MovePlayer (Vault Room)
+              }
+            }
+          }
+        }
+      ]]></script>
     </exit>
   </object>
   <object name="Canals Exit">
@@ -867,6 +916,34 @@
     <exit alias="north" to="Basement Main">
       <inherit name="northdirection" />
     </exit>
+    <object name="Filing Cabinet">
+      <inherit name="editor_object" />
+      <inherit name="container_open" />
+      <look>You see a filing cabinet in the corner of the room. There are various drawers containing all sorts of documents and papers.</look>
+      <feature_container />
+      <onopen type="script"><![CDATA[
+        msg ("You look through the various drawers in the Filing Cabinet<br/><br/>After some time looking through the various documents, you find what you are looking for.<br/><br/>You pull out the very documents that have ruined your family's name. Guido Giusseppe's corrupt actions have produced these falsified documents.<br/><br/>You now have them in your hands...")
+        AddToInventory (Forger Family Documents)
+      ]]></onopen>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Open</value>
+        <value>Close</value>
+      </displayverbs>
+      <isopen type="boolean">false</isopen>
+      <object name="Forger Family Documents">
+        <inherit name="editor_object" />
+        <look>The very documents that led to the downfall of your family's status. You now have the fate of your family in your hands.</look>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+        </inventoryverbs>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+        </displayverbs>
+        <drop type="boolean">false</drop>
+        <take />
+      </object>
+    </object>
   </object>
   <verb>
     <property>steal</property>

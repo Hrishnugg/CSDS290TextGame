@@ -542,7 +542,7 @@
     <object name="Faded Letter">
       <inherit name="editor_object" />
       <visible type="boolean">false</visible>
-      <look>A faded letter from your grandfather, hidden behind the painting for decades. It reads:<br/><br/>"My dear heir, if you are reading this, then our family has fallen on dark times. Know that Giuseppe's vault holds more than documents - it holds our legacy. The vault can be heard through the walls of the wine cellar. Listen, and you may learn its secrets. Trust no one but family. - Your loving Grandfather"</look>
+      <look><![CDATA[A faded letter from your grandfather, hidden behind the painting for decades. It reads:<br/><br/>"My dear heir, if you are reading this, then our family has fallen on dark times. Know that Giuseppe's vault holds more than documents - it holds our legacy. The vault can be heard through the walls of the wine cellar. Listen, and you may learn its secrets. Trust no one but family. - Your loving Grandfather"]]></look>
       <drop type="boolean">false</drop>
       <inventoryverbs type="stringlist">
         <value>Look at</value>
@@ -991,11 +991,11 @@
     </object>
     <object name="Hand Mirror">
       <inherit name="editor_object" />
-      <look>An exquisite silver hand mirror with intricate engravings. On the back, you notice an inscription:<br/><br/>"To my beloved Valentina, on our wedding day - Your Enrico, March 7th, 1919"<br/><br/>A touching memento of the Countess's late husband.</look>
+      <look><![CDATA[An exquisite silver hand mirror with intricate engravings. On the back, you notice an inscription:<br/><br/>"To my beloved Valentina, on our wedding day - Your Enrico, March 7th, 1919"<br/><br/>A touching memento of the Countess's late husband.]]></look>
     </object>
     <object name="Writing Desk">
       <inherit name="editor_object" />
-      <look type="script">
+      <look type="script"><![CDATA[
         if (Countess Valentina.isDistracted) {
           msg ("With the Countess gone, you search the desk more thoroughly. Among the papers you find:<br/><br/>- Various correspondence<br/>- A personal diary<br/>- A party schedule")
           MakeObjectVisible (Countess Diary)
@@ -1004,7 +1004,7 @@
         else {
           msg ("An elegant writing desk with scattered papers and correspondence. The Countess watches you carefully if you approach it too closely.")
         }
-      </look>
+      ]]></look>
     </object>
     <object name="Countess Diary">
       <inherit name="editor_object" />
@@ -1021,14 +1021,14 @@
       <inherit name="editor_object" />
       <visible type="boolean">false</visible>
       <isAltered type="boolean">false</isAltered>
-      <look type="script">
+      <look type="script"><![CDATA[
         if (this.isAltered) {
           msg ("The schedule now shows the Countess's portrait sitting is happening RIGHT NOW. She left in a hurry.")
         }
         else {
           msg ("A schedule of events for the party. One entry is relevant:<br/><br/>\"Countess Valentina Morosini - Portrait Sitting in Gallery - 11:00 PM\"<br/><br/>That is still a while away. If only the time could be changed...")
         }
-      </look>
+      ]]></look>
       <take />
       <drop type="boolean">false</drop>
       <inventoryverbs type="stringlist">
@@ -1213,7 +1213,7 @@
     <object name="Guard Schedule">
       <inherit name="editor_object" />
       <visible type="boolean">false</visible>
-      <look>A detailed schedule showing guard rotations throughout the Giuseppe estate. Key information:<br/><br/>- Guards change shifts on the hour<br/>- The basement has reduced coverage during shift changes<br/>- The vault area is most vulnerable at midnight<br/><br/>This intelligence could be valuable for timing your movements.</look>
+      <look><![CDATA[A detailed schedule showing guard rotations throughout the Giuseppe estate. Key information:<br/><br/>- Guards change shifts on the hour<br/>- The basement has reduced coverage during shift changes<br/>- The vault area is most vulnerable at midnight<br/><br/>This intelligence could be valuable for timing your movements.]]></look>
       <drop type="boolean">false</drop>
       <inventoryverbs type="stringlist">
         <value>Look at</value>
@@ -1222,14 +1222,14 @@
     <object name="Guest Registry Card">
       <inherit name="editor_object" />
       <isAltered type="boolean">false</isAltered>
-      <look type="script">
+      <look type="script"><![CDATA[
         if (this.isAltered) {
           msg ("The registry card now shows 'Chamber 1' instead of 'Chamber 2'. The Baron was quite confused when he noticed.")
         }
         else {
           msg ("A guest registry card on the nightstand. It reads:<br/><br/>\"Baron Friedrich von Stein - Chamber 2\"<br/><br/>These cards are used to help guests find their assigned rooms.")
         }
-      </look>
+      ]]></look>
       <take />
       <drop type="boolean">false</drop>
       <inventoryverbs type="stringlist">
@@ -1379,14 +1379,14 @@
       <inherit name="editor_object" />
       <visible type="boolean">false</visible>
       <isAltered type="boolean">false</isAltered>
-      <look type="script">
+      <look type="script"><![CDATA[
         if (this.isAltered) {
           msg ("The schedule now shows an immediate performance in the Music Salon. The Maestro has already left.")
         }
         else {
           msg ("A schedule of musical performances for the party. One entry shows:<br/><br/>\"Maestro Enzo Cardinali - Music Salon Performance - Midnight\"<br/><br/>That is still hours away...")
         }
-      </look>
+      ]]></look>
       <take />
       <drop type="boolean">false</drop>
       <inventoryverbs type="stringlist">

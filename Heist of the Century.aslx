@@ -18,6 +18,8 @@
     <subtitle>A Stealth, Manipulation, and Infiltration Text Adventure Game</subtitle>
     <author>Stephan Jamet, Ares Kittell, Hrishikesh Hari, and Roberto Matthews</author>
     <guardTimer type="int">3</guardTimer>
+    <lastRoom type="string"></lastRoom>
+    <currentRoom type="string"></currentRoom>
     <start type="script"><![CDATA[
       game.threat = 0
       msg ("Venice, Italy 1951. <br/><br/>Your name is Dinak Forger, a former Italian nobleman. In 1947 your family was stripped of their nobility status by the ruthless actions of Italian business mogul Guido Giuseppe. Through shady business practices and corruption, Giusseppe has managed to falsify and produce documents to ruin the Forger family’s name, and claim ultimate power over the Italian business scene. <br/><br/>While Giusseppe has won the battle that leading to the demise of your family's legacy, the Forger's story does not end here. You have spent the last four years sturggling to make ends meet. As a result you have resorted to theivery and manipulation in order to survive. <br/><br/>Three years after the demise of your family's name you have uncovered the tool that directly led to the Forger family’s rise to power, the Shkruesiverita.The Shkruesiverita is a powerful pencil that allows the writer to alter any text in the world, be it signs, texts etched in stone, and most importantly to you, legal and business documents to restore your family’s status.<br/><br/>In order to do this, you must find a way into the Giuseppe estate, break into the secured vault, and use the Shkruesiverita to delegitimize the documents responsible for the collapse of your family. Luckily for you, Giusseppe, in his extravagance and narcissism, is holding what is being dubbed \"The Party of the Century” after his rise to the peak of Italian business. This masquerade party presents you with an opportunity to use his skills as a thief, and more importantly the Shkruesiverita, to sneak and manipulate his way through the party and security to get to the Giuseppe Estate’s vault. You will have to deal with the other guests of European nobility, guards and security, and Guido Giusseppe himself to puzzle your way through to the vault. <br/>")
@@ -37,8 +39,6 @@
         }
       }
     </roomenter>
-    <lastRoom type="string"></lastRoom>
-    <currentRoom type="string"></currentRoom>
     <object name="Shining Key">
       <inherit name="editor_object" />
       <look>A shining key, quite hard to hide from anyone looking at you.</look>
@@ -137,7 +137,7 @@
               msg ("You cannot get close enough to the painting with the guard watching. You need to find a way to distract him first.")
             }
           ]]></item>
-          <item key="Turmeric Jar"><![CDATA[
+          <item key="Turmeric Jar">
             if (Turmeric Jar.isAltered) {
               msg ("You have already changed the label.")
             }
@@ -145,8 +145,8 @@
               msg ("You use the Shkruesiverita to carefully alter the label from 'Turmeric' to 'Saffron'. The powder inside looks convincing enough...")
               set (Turmeric Jar, "isAltered", true)
             }
-          ]]></item>
-          <item key="Servant's Ledger"><![CDATA[
+          </item>
+          <item key="ServantLedger"><![CDATA[
             if (Servant's Ledger.isAltered) {
               msg ("You have already altered Lucia's entry.")
             }
@@ -448,6 +448,8 @@
             this.hasBeenExamined = true
             AddToInventory (Forger Family Signet Ring)
             AddToInventory (Faded Letter)
+            MakeObjectVisible (Forger Family Signet Ring)
+            MakeObjectVisible (Faded Letter)
           }
         }
         else {
@@ -631,8 +633,18 @@
     <exit alias="southwest" to="Main Ballroom">
       <inherit name="southwestdirection" />
     </exit>
-    <exit alias="down" to="Basement Entrance">
+    <exit name="basementEntrance" alias="down" to="Basement Entrance">
       <inherit name="downdirection" />
+      <runscript />
+      <script type="script">
+        if (this.isLocked) {
+          msg ("The way is blocked by the kitchen staff.")
+        }
+        else {
+          MoveObject (player, Basement Entrance)
+        }
+      </script>
+      <isLocked />
     </exit>
     <object name="Head Chef">
       <inherit name="editor_object" />
@@ -669,7 +681,6 @@
       <inherit name="female" />
       <alias>Lucia</alias>
       <isFreed type="boolean">false</isFreed>
-      <hasBeenAskedAboutDebt type="boolean">false</hasBeenAskedAboutDebt>
       <look type="script">
         if (this.isFreed) {
           msg ("Lucia stands near the basement door with a relieved smile. She nods at you gratefully whenever you pass.")
@@ -709,7 +720,6 @@
               }
               case ("Why do you work here") {
                 msg ("Lucia sighs heavily.<br/><br/>Lucia: \"I owe Signor Giuseppe money. A debt my father left behind when he died. I must work it off, but the interest keeps growing. I fear I will never be free of this place.\"<br/><br/>She looks at the floor.<br/><br/>Lucia: \"The Servant's Ledger in the pantry tracks all our debts. Mine shows 500 Lira, but I have already paid back twice that amount. It is hopeless.\"")
-                this.hasBeenAskedAboutDebt = true
               }
             }
           }
@@ -729,7 +739,7 @@
         msg ("- Various spices and cooking supplies")
         msg ("- A thick ledger book titled 'Servant's Ledger'")
         MakeObjectVisible (Turmeric Jar)
-        MakeObjectVisible (Servant's Ledger)
+        MakeObjectVisible (ServantLedger)
       ]]></search>
     </object>
     <object name="Turmeric Jar">
@@ -737,14 +747,6 @@
       <visible type="boolean">false</visible>
       <alias>Jar of Turmeric</alias>
       <isAltered type="boolean">false</isAltered>
-      <look type="script">
-        if (this.isAltered) {
-          msg ("The jar now reads 'Saffron' thanks to the Shkruesiverita. The Head Chef would be very grateful for this.")
-        }
-        else {
-          msg ("A glass jar containing bright yellow turmeric powder. The label clearly reads 'Turmeric'. It looks somewhat similar to saffron...")
-        }
-      </look>
       <take />
       <drop type="boolean">false</drop>
       <inventoryverbs type="stringlist">
@@ -753,20 +755,15 @@
         <value>Give</value>
       </inventoryverbs>
       <feature_usegive />
-      <giveto type="scriptdictionary">
-        <item key="Head Chef"><![CDATA[
-          if (Turmeric Jar.isAltered) {
-            msg ("You present the jar to the Head Chef.<br/><br/>Head Chef Marco: \"Saffron! You found saffron! You are a miracle worker, my friend!\"<br/><br/>He snatches the jar and immediately begins adding it to the risotto.<br/><br/>Head Chef Marco: \"The VIP table will have their risotto! And you - you deserve a reward. Come, I will take you to the wine cellar myself to select the finest bottle!\"<br/><br/>He escorts you toward the basement entrance, waving off any objections from the servants.<br/><br/>Head Chef Marco: \"Let this guest through! He is with me!\"<br/><br/>Lucia steps aside, looking surprised but relieved.")
-            Head Chef.hasReceivedSaffron = true
-            Young Servant.isFreed = true
-            RemoveObject (Turmeric Jar)
-          }
-          else {
-            msg ("Head Chef Marco: \"Turmeric? TURMERIC?! I asked for saffron, not this yellow powder!\" He waves you away angrily.")
-          }
-        ]]></item>
-      </giveto>
-      <rewrite type="script"><![CDATA[
+      <look type="script">
+        if (this.isAltered) {
+          msg ("The jar now reads 'Saffron' thanks to the Shkruesiverita. The Head Chef would be very grateful for this.")
+        }
+        else {
+          msg ("A glass jar containing bright yellow turmeric powder. The label clearly reads 'Turmeric'. It looks somewhat similar to saffron...")
+        }
+      </look>
+      <rewrite type="script">
         if (this.isAltered) {
           msg ("You have already changed the label.")
         }
@@ -774,12 +771,36 @@
           msg ("You use the Shkruesiverita to carefully alter the label from 'Turmeric' to 'Saffron'. The powder inside looks convincing enough...")
           this.isAltered = true
         }
-      ]]></rewrite>
+      </rewrite>
+      <giveto type="scriptdictionary">
+        <item key="Head Chef"><![CDATA[
+          if (Turmeric Jar.isAltered) {
+            msg ("You present the jar to the Head Chef.<br/><br/>Head Chef Marco: \"Saffron! You found saffron! You are a miracle worker, my friend!\"<br/><br/>He snatches the jar and immediately begins adding it to the risotto.<br/><br/>Head Chef Marco: \"The VIP table will have their risotto! And you - you deserve a reward. Come, I will take you to the wine cellar myself to select the finest bottle!\"<br/><br/>He escorts you toward the basement entrance, waving off any objections from the servants.<br/><br/>Head Chef Marco: \"Let this guest through! He is with me!\"<br/><br/>Lucia steps aside, looking surprised but relieved.")
+            Head Chef.hasReceivedSaffron = true
+            RemoveObject (Turmeric Jar)
+            basementEntrance.isLocked = false
+          }
+          else {
+            msg ("Head Chef Marco: \"Turmeric? TURMERIC?! I asked for saffron, not this yellow powder!\" He waves you away angrily.")
+          }
+        ]]></item>
+      </giveto>
+      <givesingle />
+      <givetoanything type="script">
+      </givetoanything>
     </object>
-    <object name="Servant's Ledger">
+    <object name="ServantLedger">
       <inherit name="editor_object" />
       <visible type="boolean">false</visible>
       <isAltered type="boolean">false</isAltered>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Give</value>
+      </inventoryverbs>
+      <feature_usegive />
       <look type="script"><![CDATA[
         if (this.isAltered) {
           msg ("The ledger now shows Lucia's debt as 'PAID IN FULL'. She must be overjoyed.")
@@ -788,14 +809,6 @@
           msg ("A thick ledger book tracking the debts of all servants in the household. Flipping through, you find many names with crushing amounts owed.<br/><br/>One entry catches your eye:<br/><br/>\"Lucia Benedetti - Owes: 500 Lira - Interest accruing\"<br/><br/>The poor woman was telling the truth. Giuseppe keeps his servants trapped through debt.")
         }
       ]]></look>
-      <take />
-      <drop type="boolean">false</drop>
-      <inventoryverbs type="stringlist">
-        <value>Look at</value>
-        <value>Use</value>
-        <value>Show</value>
-      </inventoryverbs>
-      <feature_usegive />
       <rewrite type="script"><![CDATA[
         if (this.isAltered) {
           msg ("You have already altered Lucia's entry.")
@@ -807,15 +820,19 @@
       ]]></rewrite>
       <giveto type="scriptdictionary">
         <item key="Young Servant"><![CDATA[
-          if (Servant's Ledger.isAltered) {
+          if (this.isAltered) {
             msg ("You show Lucia the altered ledger. Her eyes go wide as she reads her entry.<br/><br/>Lucia: \"Paid in full? But... but how?\"<br/><br/>Tears well up in her eyes.<br/><br/>Lucia: \"I do not understand, but... I am free? Truly free?\"<br/><br/>She clutches the ledger to her chest, then looks at you with overwhelming gratitude.<br/><br/>Lucia: \"Signore, I do not know how you did this, but I am forever in your debt - no, not debt, never that word again - in your gratitude. Please, let me help you. The basement is yours to explore.\"<br/><br/>She steps aside from the basement door.")
             Young Servant.isFreed = true
+            basementEntrance.isLocked = false
+            RemoveObject (ServantLedger)
           }
           else {
             msg ("Lucia glances at the ledger and her face falls.<br/><br/>Lucia: \"Yes, there it is. My debt. 500 Lira that I will never pay off. Why show me this, signore? To mock me?\"<br/><br/>She looks hurt.")
           }
         ]]></item>
       </giveto>
+      <alias>Servant's Ledger</alias>
+      <givesingle />
     </object>
     <object name="Service Menu">
       <inherit name="editor_object" />
@@ -982,8 +999,14 @@
     </object>
     <object name="Party Schedule">
       <inherit name="editor_object" />
-      <visible type="boolean">false</visible>
+      <visible />
       <isAltered type="boolean">false</isAltered>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
       <look type="script"><![CDATA[
         if (this.isAltered) {
           msg ("The schedule now shows the Countess's portrait sitting is happening RIGHT NOW. She left in a hurry.")
@@ -992,12 +1015,6 @@
           msg ("A schedule of events for the party. One entry is relevant:<br/><br/>\"Countess Valentina Morosini - Portrait Sitting in Gallery - 11:00 PM\"<br/><br/>That is still a while away. If only the time could be changed...")
         }
       ]]></look>
-      <take />
-      <drop type="boolean">false</drop>
-      <inventoryverbs type="stringlist">
-        <value>Look at</value>
-        <value>Use</value>
-      </inventoryverbs>
       <rewrite type="script"><![CDATA[
         if (this.isAltered) {
           msg ("You have already altered the schedule.")
@@ -1012,6 +1029,10 @@
     <object name="Traveling Trunk">
       <inherit name="editor_object" />
       <isOpen type="boolean">false</isOpen>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Open</value>
+      </displayverbs>
       <look type="script">
         if (this.isOpen) {
           msg ("The trunk lies open. Inside you found various documents and a torn piece of paper with a vault digit.")
@@ -1023,10 +1044,6 @@
           msg ("A sturdy traveling trunk at the foot of the bed, secured with a small combination lock. The Countess watches it protectively.")
         }
       </look>
-      <displayverbs type="stringlist">
-        <value>Look at</value>
-        <value>Open</value>
-      </displayverbs>
       <open type="script"><![CDATA[
         if (this.isOpen) {
           msg ("The trunk is already open.")
@@ -1042,7 +1059,7 @@
             switch (result) {
               case ("412") {
                 msg ("You enter 4-1-2 - April 12th, Enrico's birthday.<br/><br/>Click!<br/><br/>The lock springs open. Inside the trunk you find expensive clothing, jewelry, and a stack of documents. Among them is a torn piece of paper that seems out of place.<br/><br/>The paper reads: \"Second: 7\"<br/><br/>This must be part of a vault combination! The Countess must have stolen this from Giuseppe's study.")
-                this.isOpen = true
+                set (Traveling Trunk, "isOpen", true)
                 set (player, "knowsVaultSecondDigit", true)
               }
               case ("123") {
@@ -1176,7 +1193,7 @@
     <object name="Guard Schedule">
       <inherit name="editor_object" />
       <visible type="boolean">false</visible>
-      <look><![CDATA[A detailed schedule showing guard rotations throughout the Giuseppe estate. Key information:<br/><br/>- Guards change shifts on the hour<br/>- The basement has reduced coverage during shift changes<br/>- The vault area is most vulnerable at midnight<br/><br/>This intelligence could be valuable for timing your movements.]]></look>
+      <look><![CDATA[A detailed schedule showing guard rotations throughout the Giuseppe estate. Key information:<br/><br/>- Guards change shifts on the hour<br/>- The basement has reduced coverage during shift changes<br/>- The vault area is most vulnerable at midnight<br/><br/>This intelligence could be valuable for timing your movements.<br/><br/>Or it could be entirely useless]]></look>
       <drop type="boolean">false</drop>
       <inventoryverbs type="stringlist">
         <value>Look at</value>
@@ -1185,6 +1202,12 @@
     <object name="Guest Registry Card">
       <inherit name="editor_object" />
       <isAltered type="boolean">false</isAltered>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
       <look type="script"><![CDATA[
         if (this.isAltered) {
           msg ("The registry card now shows 'Chamber 1' instead of 'Chamber 2'. The Baron was quite confused when he noticed.")
@@ -1193,12 +1216,6 @@
           msg ("A guest registry card on the nightstand. It reads:<br/><br/>\"Baron Friedrich von Stein - Chamber 2\"<br/><br/>These cards are used to help guests find their assigned rooms.")
         }
       ]]></look>
-      <take />
-      <drop type="boolean">false</drop>
-      <inventoryverbs type="stringlist">
-        <value>Look at</value>
-        <value>Use</value>
-      </inventoryverbs>
       <rewrite type="script"><![CDATA[
         if (this.isAltered) {
           msg ("You have already altered the registry card.")
@@ -1296,6 +1313,10 @@
     <object name="Metronome">
       <inherit name="editor_object" />
       <isOpen type="boolean">false</isOpen>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Open</value>
+      </displayverbs>
       <look type="script">
         if (this.isOpen) {
           msg ("The metronome sits open, its hidden compartment revealed. Inside you found the third vault digit.")
@@ -1307,10 +1328,6 @@
           msg ("A brass metronome ticking steadily at 120 BPM. It sits on the nightstand, keeping perfect time.")
         }
       </look>
-      <displayverbs type="stringlist">
-        <value>Look at</value>
-        <value>Open</value>
-      </displayverbs>
       <open type="script"><![CDATA[
         if (this.isOpen) {
           msg ("You have already opened the metronome.")
@@ -1329,19 +1346,25 @@
     <object name="Composition Journal">
       <inherit name="editor_object" />
       <look type="script">
-        if (Maestro Enzo.isDistracted) {
+        // if (Maestro Enzo.isDistracted) {
           msg ("A leather-bound journal filled with musical notations and bitter observations about Giuseppe. Among the pages you find a performance schedule.")
           MakeObjectVisible (Performance Schedule)
-        }
-        else {
-          msg ("A thick leather-bound journal covered in musical notations. The Maestro guards it possessively.")
-        }
+          // }
+        // else {
+          // msg ("A thick leather-bound journal covered in musical notations. The Maestro guards it possessively.")
+          // }
       </look>
     </object>
     <object name="Performance Schedule">
       <inherit name="editor_object" />
       <visible type="boolean">false</visible>
       <isAltered type="boolean">false</isAltered>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
       <look type="script"><![CDATA[
         if (this.isAltered) {
           msg ("The schedule now shows an immediate performance in the Music Salon. The Maestro has already left.")
@@ -1350,12 +1373,6 @@
           msg ("A schedule of musical performances for the party. One entry shows:<br/><br/>\"Maestro Enzo Cardinali - Music Salon Performance - Midnight\"<br/><br/>That is still hours away...")
         }
       ]]></look>
-      <take />
-      <drop type="boolean">false</drop>
-      <inventoryverbs type="stringlist">
-        <value>Look at</value>
-        <value>Use</value>
-      </inventoryverbs>
       <rewrite type="script"><![CDATA[
         if (this.isAltered) {
           msg ("You have already altered the schedule.")

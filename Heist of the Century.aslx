@@ -68,6 +68,8 @@
       <knowsCoatGuardName type="boolean">false</knowsCoatGuardName>
       <knowsVaultLastDigit type="boolean">false</knowsVaultLastDigit>
       <knowsVaultFirstDigit type="boolean">false</knowsVaultFirstDigit>
+      <knowsVaultSecondDigit type="boolean">false</knowsVaultSecondDigit>
+      <knowsVaultThirdDigit type="boolean">false</knowsVaultThirdDigit>
       <object name="Shkruesiverita">
         <inherit name="editor_object" />
         <look>The Shkruesiverita is a powerful tool used to alter any text in the world. This tool is what your ancestors used to rise to power. Though thought lost to time, it has found its way to your hands. Use this tool to help navigate, manipulate, and stealth your way through the party to get to the vault and restore your family's status.</look>
@@ -101,6 +103,80 @@
           <item key="Forger Family Documents"><![CDATA[
             msg ("With the Forger Family Documents finally aquired, you carefully read the contents of them.<br/><br/>You see the lies Guido Giusseppe has spread and the corrupt actions he has taken to lead your family to ruin.<br/><br/>With the Shkruesiverita you go though each document altering their contents...<br/><br/>These documents now have no hold over your family.<br/><br/>In the coming days you challenge Guido Giusseppe's legal victories over your family. Through your appeals, the altered documents are presented in a fair court far from Guido Giuseppe's corrupt hands. The contents of the documents are clearly false and fabricated. You win the case easily. Guido Giuseppe is ordered to pay recompense to your family. In the following months your family's status is restored.<br/><br/>You have completed your objective.")
             finish
+          ]]></item>
+          <item key="Guest Book"><![CDATA[
+            if (Guest Book.isAltered) {
+              msg ("You have already altered the guest book.")
+            }
+            else {
+              msg ("You use the Shkruesiverita to add a new entry to the guest book:<br/><br/>\"Inspector Marcello Ricci - Ministry of Cultural Affairs - Conducting Surprise Audit\"<br/><br/>You step back and wait. The guard glances at the book out of habit and his face goes pale.<br/><br/>Gallery Guard: \"An inspector? Here? Now? I must inform Signor Giuseppe immediately!\"<br/><br/>He rushes out of the gallery. The art critic, delighted by the chaos, hurries off to examine other paintings she couldn't access before.<br/><br/>The restricted area is now unguarded.")
+              set (Guest Book, "isAltered", true)
+              set (Gallery Guard, "isDistracted", true)
+            }
+          ]]></item>
+          <item key="Restricted Painting"><![CDATA[
+            if (Gallery Guard.isDistracted) {
+              if (Restricted Painting.hasBeenExamined) {
+                msg ("You have already revealed the hidden message.")
+              }
+              else {
+                msg ("You use the Shkruesiverita on the painting, focusing on the areas where the brushwork seems uneven...<br/><br/>The magic of the pencil reveals text hidden beneath layers of paint:<br/><br/>\"To my heir: Trust in the family motto. The truth lies beneath the lies. - Grandfather Forger\"<br/><br/>Moved by this message from your grandfather, you examine the frame more carefully and discover a hidden compartment behind it.<br/><br/>Inside you find a Forger Family Signet Ring and a faded letter.")
+                set (Restricted Painting, "hasBeenExamined", true)
+                AddToInventory (Forger Family Signet Ring)
+                AddToInventory (Faded Letter)
+              }
+            }
+            else {
+              msg ("You cannot get close enough to the painting with the guard watching. You need to find a way to distract him first.")
+            }
+          ]]></item>
+          <item key="Turmeric Jar"><![CDATA[
+            if (Turmeric Jar.isAltered) {
+              msg ("You have already changed the label.")
+            }
+            else {
+              msg ("You use the Shkruesiverita to carefully alter the label from 'Turmeric' to 'Saffron'. The powder inside looks convincing enough...")
+              set (Turmeric Jar, "isAltered", true)
+            }
+          ]]></item>
+          <item key="Servant's Ledger"><![CDATA[
+            if (Servant's Ledger.isAltered) {
+              msg ("You have already altered Lucia's entry.")
+            }
+            else {
+              msg ("You use the Shkruesiverita to alter Lucia's entry:<br/><br/>From: \"Lucia Benedetti - Owes: 500 Lira - Interest accruing\"<br/>To: \"Lucia Benedetti - Owes: 0 Lira - PAID IN FULL\"<br/><br/>The ink shimmers and settles into place. As far as this ledger is concerned, Lucia is free.")
+              set (Servant's Ledger, "isAltered", true)
+            }
+          ]]></item>
+          <item key="Party Schedule"><![CDATA[
+            if (Party Schedule.isAltered) {
+              msg ("You have already altered the schedule.")
+            }
+            else {
+              msg ("You use the Shkruesiverita to change the time of the portrait sitting from '11:00 PM' to 'NOW - IMMEDIATELY'.<br/><br/>A servant appears at the door moments later.<br/><br/>Servant: \"Countess Morosini? The artist is ready for your portrait sitting in the Gallery.\"<br/><br/>Countess Valentina: \"What? Already? The schedule said 11:00!\"<br/><br/>Servant: \"I apologize, signora, but the schedule clearly says immediately. The artist is waiting.\"<br/><br/>The Countess huffs indignantly but leaves the room, muttering about incompetent staff.<br/><br/>You are now alone in the bedchamber.")
+              set (Party Schedule, "isAltered", true)
+              set (Countess Valentina, "isDistracted", true)
+            }
+          ]]></item>
+          <item key="Performance Schedule"><![CDATA[
+            if (Performance Schedule.isAltered) {
+              msg ("You have already altered the schedule.")
+            }
+            else {
+              msg ("You use the Shkruesiverita to change the performance time to 'NOW - IMMEDIATELY'.<br/><br/>A servant knocks at the door moments later.<br/><br/>Servant: \"Maestro Cardinali? The guests are assembled in the Music Salon for your performance.\"<br/><br/>Maestro Enzo: \"What? Now? But I am not prepared!\"<br/><br/>Servant: \"The schedule says immediately, Maestro. They are waiting.\"<br/><br/>The Maestro grumbles but gathers his violin and shuffles out, muttering about incompetent schedulers.<br/><br/>You are now alone in the bedchamber.")
+              set (Performance Schedule, "isAltered", true)
+              set (Maestro Enzo, "isDistracted", true)
+            }
+          ]]></item>
+          <item key="Guest Registry Card"><![CDATA[
+            if (Guest Registry Card.isAltered) {
+              msg ("You have already altered the registry card.")
+            }
+            else {
+              msg ("You use the Shkruesiverita to change 'Chamber 2' to 'Chamber 1'.<br/><br/>You place the card prominently on the nightstand and wait. The Baron eventually glances at it and frowns.<br/><br/>Baron Friedrich: \"Chamber 1? But I thought... No, I must be mistaken. These Italian houses are so confusing.\"<br/><br/>He gathers some of his papers.<br/><br/>Baron Friedrich: \"Excuse me. I must find my correct room.\"<br/><br/>He leaves, looking puzzled. You are now alone in the bedchamber.")
+              set (Guest Registry Card, "isAltered", true)
+              set (Baron Friedrich, "isDistracted", true)
+            }
           ]]></item>
         </selfuseon>
       </object>
@@ -325,9 +401,153 @@
   </object>
   <object name="Gallery">
     <inherit name="editor_room" />
+    <description><![CDATA[A grand gallery displaying Guido Giuseppe's art collection. Paintings in golden frames line the walls, sculptures stand on marble pedestals, and a velvet rope separates visitors from the most valuable pieces in a restricted area.<br/><br/>An {object:Art Critic} examines the works with a discerning eye. A {object:Gallery Guard} stands watch near the restricted section.]]></description>
     <exit alias="northwest" to="Main Ballroom">
       <inherit name="northwestdirection" />
     </exit>
+    <object name="Art Critic">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <alias>Signora Bianca Ferretti</alias>
+      <look>A distinguished woman in her 40s with sharp eyes and an air of expertise. She studies each painting with intense scrutiny, occasionally shaking her head in disapproval.</look>
+      <speak type="script"><![CDATA[
+        msg ("You approach the art critic. She barely glances at you before returning her gaze to the paintings.")
+        topics = Split ("What do you think of the collection;Do you notice anything unusual;Who are you", ";")
+        ShowMenu ("What would you like to say?", topics, false) {
+          switch (result) {
+            case ("What do you think of the collection") {
+              msg ("Signora Ferretti: \"Giuseppe has wealth, but not taste. Half of these are copies, and the other half were acquired through... questionable means.\"<br/><br/>She sniffs disdainfully.")
+            }
+            case ("Do you notice anything unusual") {
+              msg ("Signora Ferretti: \"That painting behind the rope - 'The Last Venetian Duke' - it has unusual brushwork. As if someone painted over a hidden message long ago. I would love to examine it closely, but that guard watches it like a hawk.\"")
+            }
+            case ("Who are you") {
+              msg ("Signora Ferretti: \"I am Signora Bianca Ferretti, art critic for the Venetian Gazette. I was invited to write a flattering piece about this collection, but I may have to disappoint our host.\"<br/><br/>She smirks.")
+            }
+          }
+        }
+      ]]></speak>
+    </object>
+    <object name="Gallery Guard">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <isDistracted type="boolean">false</isDistracted>
+      <look type="script">
+        if (this.isDistracted) {
+          msg ("The guard has left his post, apparently to alert his superiors about something.")
+        }
+        else {
+          msg ("A stoic guard in a crisp uniform stands near the velvet rope, watching the restricted painting closely. He does not look like someone easily fooled.")
+        }
+      </look>
+      <speak type="script"><![CDATA[
+        if (this.isDistracted) {
+          msg ("The guard is not here.")
+        }
+        else {
+          msg ("Gallery Guard: \"No touching the artwork, signore. And stay behind the rope.\"<br/><br/>He stares at you coldly, clearly not interested in conversation.")
+        }
+      ]]></speak>
+    </object>
+    <object name="Portrait of Giuseppe">
+      <inherit name="editor_object" />
+      <look>A massive, ostentatious self-portrait of Guido Giuseppe. He is depicted in regal attire, looking down at the viewer with smug satisfaction. The frame is solid gold and encrusted with gems. Gaudy beyond belief.</look>
+    </object>
+    <object name="Landscape Painting">
+      <inherit name="editor_object" />
+      <alias>Venetian Sunset</alias>
+      <look>A beautiful landscape painting titled "Venetian Sunset." The colors are masterful, capturing the golden light reflecting off the canals. It is signed by a famous Venetian artist.</look>
+    </object>
+    <object name="Restricted Painting">
+      <inherit name="editor_object" />
+      <alias>The Last Venetian Duke</alias>
+      <hasBeenExamined type="boolean">false</hasBeenExamined>
+      <look type="script"><![CDATA[
+        if (Gallery Guard.isDistracted) {
+          if (this.hasBeenExamined) {
+            msg ("The painting of the Last Venetian Duke. Behind the frame you found a hidden compartment containing your family's signet ring and a faded letter.")
+          }
+          else {
+            msg ("With the guard gone, you step over the velvet rope and examine the painting closely.<br/><br/>Something about it seems hauntingly familiar... The face of the duke, his posture, the coat of arms in the corner - it bears the Forger family crest!<br/><br/>This painting was stolen from your family during their downfall. Looking closer, you notice the brushwork is uneven in places, as if concealing something beneath.")
+          }
+        }
+        else {
+          msg ("A stunning portrait of a Venetian Duke in ceremonial robes, displayed behind a velvet rope in the restricted area. The guard watches it closely.<br/><br/>Something about the painting seems strangely familiar to you...")
+        }
+      ]]></look>
+      <rewrite type="script"><![CDATA[
+        if (Gallery Guard.isDistracted) {
+          if (this.hasBeenExamined) {
+            msg ("You have already revealed the hidden message.")
+          }
+          else {
+            msg ("You use the Shkruesiverita on the painting, focusing on the areas where the brushwork seems uneven...<br/><br/>The magic of the pencil reveals text hidden beneath layers of paint:<br/><br/>\"To my heir: Trust in the family motto. The truth lies beneath the lies. - Grandfather Forger\"<br/><br/>Moved by this message from your grandfather, you examine the frame more carefully and discover a hidden compartment behind it.<br/><br/>Inside you find a Forger Family Signet Ring and a faded letter.")
+            this.hasBeenExamined = true
+            AddToInventory (Forger Family Signet Ring)
+            AddToInventory (Faded Letter)
+          }
+        }
+        else {
+          msg ("You cannot get close enough to the painting with the guard watching. You need to find a way to distract him first.")
+        }
+      ]]></rewrite>
+    </object>
+    <object name="Bronze Sculpture">
+      <inherit name="editor_object" />
+      <alias>Sculpture of Mercury</alias>
+      <look>A bronze sculpture of Mercury, the messenger god, caught mid-flight with winged sandals. Despite Giuseppe's questionable taste, this piece is genuinely impressive.</look>
+    </object>
+    <object name="Guest Book">
+      <inherit name="editor_object" />
+      <isAltered type="boolean">false</isAltered>
+      <look type="script"><![CDATA[
+        if (this.isAltered) {
+          msg ("The guest book now shows an entry for an Inspector from the Ministry of Cultural Affairs conducting a surprise audit. The guard panicked when he saw it and left to alert his superiors.")
+        }
+        else {
+          msg ("A leather-bound guest book where notable visitors sign their names. You see signatures from various nobles, artists, and dignitaries who have viewed the collection.<br/><br/>The book sits on a small podium near the entrance.")
+        }
+      ]]></look>
+      <rewrite type="script"><![CDATA[
+        if (this.isAltered) {
+          msg ("You have already altered the guest book.")
+        }
+        else {
+          msg ("You use the Shkruesiverita to add a new entry to the guest book:<br/><br/>\"Inspector Marcello Ricci - Ministry of Cultural Affairs - Conducting Surprise Audit\"<br/><br/>You step back and wait. The guard glances at the book out of habit and his face goes pale.<br/><br/>Gallery Guard: \"An inspector? Here? Now? I must inform Signor Giuseppe immediately!\"<br/><br/>He rushes out of the gallery. The art critic, delighted by the chaos, hurries off to examine other paintings she couldn't access before.<br/><br/>The restricted area is now unguarded.")
+          this.isAltered = true
+          Gallery Guard.isDistracted = true
+        }
+      ]]></rewrite>
+    </object>
+    <object name="Velvet Rope">
+      <inherit name="editor_object" />
+      <look type="script">
+        if (Gallery Guard.isDistracted) {
+          msg ("The velvet rope that once blocked access to the restricted area. With the guard gone, nothing stops you from stepping over it.")
+        }
+        else {
+          msg ("A velvet rope on brass stands separates visitors from the most valuable painting in the collection. The guard watches it closely.")
+        }
+      </look>
+    </object>
+    <object name="Forger Family Signet Ring">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>Your family's signet ring, bearing the Forger crest. It was lost when your family fell from grace. Having it back feels like reclaiming a piece of your identity.</look>
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+    </object>
+    <object name="Faded Letter">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>A faded letter from your grandfather, hidden behind the painting for decades. It reads:<br/><br/>"My dear heir, if you are reading this, then our family has fallen on dark times. Know that Giuseppe's vault holds more than documents - it holds our legacy. The vault can be heard through the walls of the wine cellar. Listen, and you may learn its secrets. Trust no one but family. - Your loving Grandfather"</look>
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+    </object>
   </object>
   <object name="Coat Room">
     <inherit name="editor_room" />
@@ -444,12 +664,204 @@
   </object>
   <object name="Kitchen">
     <inherit name="editor_room" />
+    <description><![CDATA[A bustling kitchen filled with the aromas of Italian cuisine. Cooks and servants hurry about preparing elaborate dishes for the party. Pots bubble on stoves, and the clatter of dishes fills the air.<br/><br/>A {object:Head Chef} commands the chaos with theatrical gestures. A nervous {object:Young Servant} hovers near the door leading down to the basement.]]></description>
     <exit alias="southwest" to="Main Ballroom">
       <inherit name="southwestdirection" />
     </exit>
     <exit alias="down" to="Basement Entrance">
       <inherit name="downdirection" />
     </exit>
+    <object name="Head Chef">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alias>Head Chef Marco</alias>
+      <hasReceivedSaffron type="boolean">false</hasReceivedSaffron>
+      <look>A rotund man with a thick mustache and a tall chef's hat. He barks orders at the kitchen staff while frantically stirring multiple pots. Sweat beads on his forehead.</look>
+      <speak type="script"><![CDATA[
+        if (this.hasReceivedSaffron) {
+          msg ("Head Chef Marco: \"Ah, my friend! The saffron risotto was a triumph! If you need anything, just ask!\"")
+        }
+        else {
+          msg ("The chef barely acknowledges you, waving a ladle dismissively.")
+          topics = Split ("How is the cooking going;Can I help with anything;I need to get to the basement", ";")
+          ShowMenu ("What would you like to say?", topics, false) {
+            switch (result) {
+              case ("How is the cooking going") {
+                msg ("Head Chef Marco: \"Terrible! Magnifico! All at once!\" He gestures wildly. \"We are missing saffron for the risotto! The VIP table will have my head! But I cannot leave my station!\"")
+              }
+              case ("Can I help with anything") {
+                msg ("Head Chef Marco: \"Unless you have saffron from the Rialto market hiding in your pocket, no!\" He returns to his frantic cooking.")
+              }
+              case ("I need to get to the basement") {
+                msg ("Head Chef Marco: \"Guests do not belong in the basement! Now leave my kitchen before you ruin something!\"<br/><br/>(Threat level increased)")
+                game.threat = game.threat + 1
+              }
+            }
+          }
+        }
+      ]]></speak>
+    </object>
+    <object name="Young Servant">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <alias>Lucia</alias>
+      <isFreed type="boolean">false</isFreed>
+      <hasBeenAskedAboutDebt type="boolean">false</hasBeenAskedAboutDebt>
+      <look type="script">
+        if (this.isFreed) {
+          msg ("Lucia stands near the basement door with a relieved smile. She nods at you gratefully whenever you pass.")
+        }
+        else {
+          msg ("A young woman in a servant's uniform, perhaps in her early twenties. She stands nervously near the basement door, fidgeting with her apron. Her eyes dart around as if expecting trouble.")
+        }
+      </look>
+      <speak type="script"><![CDATA[
+        if (this.isFreed) {
+          msg ("Lucia: \"I cannot thank you enough, signore. If there is anything else you need to know, just ask.\"")
+          topics = Split ("Tell me about the basement;What do you know about the vault;Any other secrets", ";")
+          ShowMenu ("What would you like to ask?", topics, false) {
+            switch (result) {
+              case ("Tell me about the basement") {
+                msg ("Lucia: \"The basement has the wine cellar, and beyond that... darker places. There is a dungeon where Signor Giuseppe keeps those who displease him.\"")
+              }
+              case ("What do you know about the vault") {
+                msg ("Lucia: \"The vault is past the wine cellar, heavily guarded. But there is a prisoner in the dungeon - Antonio, I think - who knows something about the combination. He was Giuseppe's former business partner.\"")
+              }
+              case ("Any other secrets") {
+                msg ("Lucia: \"The guards change shifts when the church bells ring at midnight. That might be useful if you need to move unseen.\"")
+              }
+            }
+          }
+        }
+        else {
+          msg ("The servant looks at you nervously.")
+          topics = Split ("Can I pass through here;Why do you look so worried;Why do you work here", ";")
+          ShowMenu ("What would you like to say?", topics, false) {
+            switch (result) {
+              case ("Can I pass through here") {
+                msg ("Lucia: \"I am sorry, signore, but guests are not allowed in the basement. The master's orders.\"<br/><br/>She looks genuinely apologetic but will not move.")
+              }
+              case ("Why do you look so worried") {
+                msg ("Lucia: \"It is nothing, signore. Just... the party makes everyone nervous.\"<br/><br/>She does not seem to want to share more without a reason to trust you.")
+              }
+              case ("Why do you work here") {
+                msg ("Lucia sighs heavily.<br/><br/>Lucia: \"I owe Signor Giuseppe money. A debt my father left behind when he died. I must work it off, but the interest keeps growing. I fear I will never be free of this place.\"<br/><br/>She looks at the floor.<br/><br/>Lucia: \"The Servant's Ledger in the pantry tracks all our debts. Mine shows 500 Lira, but I have already paid back twice that amount. It is hopeless.\"")
+                this.hasBeenAskedAboutDebt = true
+              }
+            }
+          }
+        }
+      ]]></speak>
+    </object>
+    <object name="Pantry">
+      <inherit name="editor_object" />
+      <look>A large pantry filled with ingredients, spices, and cooking supplies. Various jars line the shelves, and a ledger book sits on a small desk.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Search</value>
+      </displayverbs>
+      <search type="script"><![CDATA[
+        msg ("You search through the pantry carefully.<br/><br/>Among the various ingredients, you find:")
+        msg ("- A jar labeled 'Turmeric'")
+        msg ("- Various spices and cooking supplies")
+        msg ("- A thick ledger book titled 'Servant's Ledger'")
+        MakeObjectVisible (Turmeric Jar)
+        MakeObjectVisible (Servant's Ledger)
+      ]]></search>
+    </object>
+    <object name="Turmeric Jar">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <alias>Jar of Turmeric</alias>
+      <isAltered type="boolean">false</isAltered>
+      <look type="script">
+        if (this.isAltered) {
+          msg ("The jar now reads 'Saffron' thanks to the Shkruesiverita. The Head Chef would be very grateful for this.")
+        }
+        else {
+          msg ("A glass jar containing bright yellow turmeric powder. The label clearly reads 'Turmeric'. It looks somewhat similar to saffron...")
+        }
+      </look>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Give</value>
+      </inventoryverbs>
+      <feature_usegive />
+      <giveto type="scriptdictionary">
+        <item key="Head Chef"><![CDATA[
+          if (Turmeric Jar.isAltered) {
+            msg ("You present the jar to the Head Chef.<br/><br/>Head Chef Marco: \"Saffron! You found saffron! You are a miracle worker, my friend!\"<br/><br/>He snatches the jar and immediately begins adding it to the risotto.<br/><br/>Head Chef Marco: \"The VIP table will have their risotto! And you - you deserve a reward. Come, I will take you to the wine cellar myself to select the finest bottle!\"<br/><br/>He escorts you toward the basement entrance, waving off any objections from the servants.<br/><br/>Head Chef Marco: \"Let this guest through! He is with me!\"<br/><br/>Lucia steps aside, looking surprised but relieved.")
+            Head Chef.hasReceivedSaffron = true
+            Young Servant.isFreed = true
+            RemoveObject (Turmeric Jar)
+          }
+          else {
+            msg ("Head Chef Marco: \"Turmeric? TURMERIC?! I asked for saffron, not this yellow powder!\" He waves you away angrily.")
+          }
+        ]]></item>
+      </giveto>
+      <rewrite type="script"><![CDATA[
+        if (this.isAltered) {
+          msg ("You have already changed the label.")
+        }
+        else {
+          msg ("You use the Shkruesiverita to carefully alter the label from 'Turmeric' to 'Saffron'. The powder inside looks convincing enough...")
+          this.isAltered = true
+        }
+      ]]></rewrite>
+    </object>
+    <object name="Servant's Ledger">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <isAltered type="boolean">false</isAltered>
+      <look type="script"><![CDATA[
+        if (this.isAltered) {
+          msg ("The ledger now shows Lucia's debt as 'PAID IN FULL'. She must be overjoyed.")
+        }
+        else {
+          msg ("A thick ledger book tracking the debts of all servants in the household. Flipping through, you find many names with crushing amounts owed.<br/><br/>One entry catches your eye:<br/><br/>\"Lucia Benedetti - Owes: 500 Lira - Interest accruing\"<br/><br/>The poor woman was telling the truth. Giuseppe keeps his servants trapped through debt.")
+        }
+      ]]></look>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Show</value>
+      </inventoryverbs>
+      <feature_usegive />
+      <rewrite type="script"><![CDATA[
+        if (this.isAltered) {
+          msg ("You have already altered Lucia's entry.")
+        }
+        else {
+          msg ("You use the Shkruesiverita to alter Lucia's entry:<br/><br/>From: \"Lucia Benedetti - Owes: 500 Lira - Interest accruing\"<br/>To: \"Lucia Benedetti - Owes: 0 Lira - PAID IN FULL\"<br/><br/>The ink shimmers and settles into place. As far as this ledger is concerned, Lucia is free.")
+          this.isAltered = true
+        }
+      ]]></rewrite>
+      <giveto type="scriptdictionary">
+        <item key="Young Servant"><![CDATA[
+          if (Servant's Ledger.isAltered) {
+            msg ("You show Lucia the altered ledger. Her eyes go wide as she reads her entry.<br/><br/>Lucia: \"Paid in full? But... but how?\"<br/><br/>Tears well up in her eyes.<br/><br/>Lucia: \"I do not understand, but... I am free? Truly free?\"<br/><br/>She clutches the ledger to her chest, then looks at you with overwhelming gratitude.<br/><br/>Lucia: \"Signore, I do not know how you did this, but I am forever in your debt - no, not debt, never that word again - in your gratitude. Please, let me help you. The basement is yours to explore.\"<br/><br/>She steps aside from the basement door.")
+            Young Servant.isFreed = true
+          }
+          else {
+            msg ("Lucia glances at the ledger and her face falls.<br/><br/>Lucia: \"Yes, there it is. My debt. 500 Lira that I will never pay off. Why show me this, signore? To mock me?\"<br/><br/>She looks hurt.")
+          }
+        ]]></item>
+      </giveto>
+    </object>
+    <object name="Service Menu">
+      <inherit name="editor_object" />
+      <look>A detailed menu showing all the dishes being prepared for the party and their delivery schedule. One entry is circled in red: "Saffron Risotto - VIP Table - 9:00 PM - URGENT: Missing saffron"</look>
+    </object>
+    <object name="Wine Crates">
+      <inherit name="editor_object" />
+      <look>Wooden crates filled with wine bottles, waiting to be taken down to the cellar. The labels show they are expensive Venetian vintages.</look>
+    </object>
   </object>
   <object name="Ballroom Second Floor">
     <inherit name="editor_room" />
@@ -533,21 +945,465 @@
   </object>
   <object name="Bedchamber 1">
     <inherit name="editor_room" />
+    <description><![CDATA[A luxurious guest bedchamber adorned with Venetian silk curtains and gilded furniture. The room belongs to {object:Countess Valentina}, a prominent guest at the party.<br/><br/>Her {object:Vanity Table} is cluttered with perfume bottles. A {object:Traveling Trunk} sits at the foot of the ornate bed, and an elegant {object:Writing Desk} holds scattered papers.]]></description>
     <exit alias="southeast" to="Ballroom Second Floor">
       <inherit name="southeastdirection" />
     </exit>
+    <object name="Countess Valentina">
+      <inherit name="editor_object" />
+      <inherit name="female" />
+      <alias>Countess Valentina Morosini</alias>
+      <isDistracted type="boolean">false</isDistracted>
+      <look type="script">
+        if (this.isDistracted) {
+          msg ("The Countess has left for her portrait sitting in the Gallery.")
+        }
+        else {
+          msg ("A sharp-tongued noblewoman in her 50s, dressed in elegant black silk. Despite attending the party, she carries an air of disdain for everything around her. She guards her belongings jealously, particularly the traveling trunk.")
+        }
+      </look>
+      <speak type="script"><![CDATA[
+        if (this.isDistracted) {
+          msg ("The Countess is not here.")
+        }
+        else {
+          msg ("The Countess regards you with cool suspicion.")
+          topics = Split ("What brings you to the party;You seem to dislike the host;What is in that trunk", ";")
+          ShowMenu ("What would you like to say?", topics, false) {
+            switch (result) {
+              case ("What brings you to the party") {
+                msg ("Countess Valentina: \"Social obligation, nothing more. When Guido Giuseppe extends an invitation, one does not refuse - unless one wishes to become his enemy.\"<br/><br/>She sighs with barely concealed contempt.")
+              }
+              case ("You seem to dislike the host") {
+                msg ("Countess Valentina: \"Guido Giuseppe is a snake who has ruined many good families. I keep evidence of his dealings in my trunk - insurance, you might call it. But I would never share such things with a stranger.\"<br/><br/>She eyes you carefully.")
+              }
+              case ("What is in that trunk") {
+                msg ("Countess Valentina: \"My personal effects, locked away safely. The combination is my late husband Enrico's birthday - a date I keep close to my heart.\"<br/><br/>Her expression softens momentarily.<br/><br/>Countess Valentina: \"He passed ten years ago. I still miss him every day.\"")
+              }
+            }
+          }
+        }
+      ]]></speak>
+    </object>
+    <object name="Vanity Table">
+      <inherit name="editor_object" />
+      <look>An ornate vanity table covered with expensive perfume bottles, cosmetics, and a {object:Hand Mirror}. The Countess clearly travels in style.</look>
+    </object>
+    <object name="Hand Mirror">
+      <inherit name="editor_object" />
+      <look>An exquisite silver hand mirror with intricate engravings. On the back, you notice an inscription:<br/><br/>"To my beloved Valentina, on our wedding day - Your Enrico, March 7th, 1919"<br/><br/>A touching memento of the Countess's late husband.</look>
+    </object>
+    <object name="Writing Desk">
+      <inherit name="editor_object" />
+      <look type="script">
+        if (Countess Valentina.isDistracted) {
+          msg ("With the Countess gone, you search the desk more thoroughly. Among the papers you find:<br/><br/>- Various correspondence<br/>- A personal diary<br/>- A party schedule")
+          MakeObjectVisible (Countess Diary)
+          MakeObjectVisible (Party Schedule)
+        }
+        else {
+          msg ("An elegant writing desk with scattered papers and correspondence. The Countess watches you carefully if you approach it too closely.")
+        }
+      </look>
+    </object>
+    <object name="Countess Diary">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <alias>Personal Diary</alias>
+      <look><![CDATA[A leather-bound diary with the Countess's personal thoughts. Flipping through, one entry catches your eye:<br/><br/>"April 12th, 1939 - Today marks 50 years since my dear Enrico was born. I visited his grave and left flowers. I still remember the day we met, when he was just a young man of 20..."<br/><br/>So Enrico's birthday was April 12th - the trunk combination must be 412.]]></look>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+    </object>
+    <object name="Party Schedule">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <isAltered type="boolean">false</isAltered>
+      <look type="script">
+        if (this.isAltered) {
+          msg ("The schedule now shows the Countess's portrait sitting is happening RIGHT NOW. She left in a hurry.")
+        }
+        else {
+          msg ("A schedule of events for the party. One entry is relevant:<br/><br/>\"Countess Valentina Morosini - Portrait Sitting in Gallery - 11:00 PM\"<br/><br/>That is still a while away. If only the time could be changed...")
+        }
+      </look>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
+      <rewrite type="script"><![CDATA[
+        if (this.isAltered) {
+          msg ("You have already altered the schedule.")
+        }
+        else {
+          msg ("You use the Shkruesiverita to change the time of the portrait sitting from '11:00 PM' to 'NOW - IMMEDIATELY'.<br/><br/>A servant appears at the door moments later.<br/><br/>Servant: \"Countess Morosini? The artist is ready for your portrait sitting in the Gallery.\"<br/><br/>Countess Valentina: \"What? Already? The schedule said 11:00!\"<br/><br/>Servant: \"I apologize, signora, but the schedule clearly says immediately. The artist is waiting.\"<br/><br/>The Countess huffs indignantly but leaves the room, muttering about incompetent staff.<br/><br/>You are now alone in the bedchamber.")
+          this.isAltered = true
+          Countess Valentina.isDistracted = true
+        }
+      ]]></rewrite>
+    </object>
+    <object name="Traveling Trunk">
+      <inherit name="editor_object" />
+      <isOpen type="boolean">false</isOpen>
+      <look type="script">
+        if (this.isOpen) {
+          msg ("The trunk lies open. Inside you found various documents and a torn piece of paper with a vault digit.")
+        }
+        else if (Countess Valentina.isDistracted) {
+          msg ("A sturdy traveling trunk with a small combination lock. Three dials show numbers 0-9. Now that the Countess is gone, you could try to open it.")
+        }
+        else {
+          msg ("A sturdy traveling trunk at the foot of the bed, secured with a small combination lock. The Countess watches it protectively.")
+        }
+      </look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Open</value>
+      </displayverbs>
+      <open type="script"><![CDATA[
+        if (this.isOpen) {
+          msg ("The trunk is already open.")
+        }
+        else if (not Countess Valentina.isDistracted) {
+          msg ("The Countess glares at you.<br/><br/>Countess Valentina: \"Do not touch my belongings!\"<br/><br/>(Threat level increased)")
+          game.threat = game.threat + 2
+        }
+        else {
+          msg ("You examine the combination lock. Three dials, each showing 0-9.")
+          topics = Split ("123;412;719;307", ";")
+          ShowMenu ("Enter a combination:", topics, false) {
+            switch (result) {
+              case ("412") {
+                msg ("You enter 4-1-2 - April 12th, Enrico's birthday.<br/><br/>Click!<br/><br/>The lock springs open. Inside the trunk you find expensive clothing, jewelry, and a stack of documents. Among them is a torn piece of paper that seems out of place.<br/><br/>The paper reads: \"Second: 7\"<br/><br/>This must be part of a vault combination! The Countess must have stolen this from Giuseppe's study.")
+                this.isOpen = true
+                set (player, "knowsVaultSecondDigit", true)
+              }
+              case ("123") {
+                msg ("The lock does not budge. That combination is incorrect.")
+              }
+              case ("719") {
+                msg ("The lock does not budge. That combination is incorrect.")
+              }
+              case ("307") {
+                msg ("The lock does not budge. That combination is incorrect - though March 7th was their wedding day, not his birthday.")
+              }
+            }
+          }
+        }
+      ]]></open>
+    </object>
   </object>
   <object name="Bedchamber 2">
     <inherit name="editor_room" />
+    <description><![CDATA[A stately guest chamber with a distinctly Austrian aesthetic. This room has been assigned to {object:Baron Friedrich}, an Austrian diplomat.<br/><br/>A {object:Chess Set} sits mid-game on a side table. {object:Diplomatic Papers} are spread on a desk, and a {object:Painting of the Alps} hangs slightly askew on the wall. A {object:Guest Registry Card} lies on the nightstand.]]></description>
     <exit alias="southwest" to="Ballroom Second Floor">
       <inherit name="southwestdirection" />
     </exit>
+    <object name="Baron Friedrich">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alias>Baron Friedrich von Stein</alias>
+      <isDistracted type="boolean">false</isDistracted>
+      <hasBeenImpressed type="boolean">false</hasBeenImpressed>
+      <look type="script">
+        if (this.isDistracted) {
+          msg ("The Baron has left to find his 'correct' room after the registry confusion.")
+        }
+        else {
+          msg ("A calculating man in his 50s with sharp eyes and a perfectly groomed mustache. He wears an Austrian military uniform with numerous medals. He studies you like a chess opponent.")
+        }
+      </look>
+      <speak type="script"><![CDATA[
+        if (this.isDistracted) {
+          msg ("The Baron is not here.")
+        }
+        else if (this.hasBeenImpressed) {
+          msg ("Baron Friedrich: \"Ah, my clever friend. Is there something else you wish to discuss?\"")
+          topics = Split ("Tell me about Giuseppe;What secrets do you know;That is all for now", ";")
+          ShowMenu ("What would you like to ask?", topics, false) {
+            switch (result) {
+              case ("Tell me about Giuseppe") {
+                msg ("Baron Friedrich: \"Giuseppe is a useful fool. He thinks he controls Italian politics, but he is merely a pawn in larger games. Austria watches him closely.\"")
+              }
+              case ("What secrets do you know") {
+                msg ("Baron Friedrich leans in conspiratorially.<br/><br/>Baron Friedrich: \"I have observed the guard rotations in this estate. They change shifts on the hour. During the transition, the basement is less watched. If one were planning something... illicit... that would be the time.\"")
+              }
+              case ("That is all for now") {
+                msg ("The Baron nods and returns to studying his chess position.")
+              }
+            }
+          }
+        }
+        else {
+          msg ("The Baron regards you with cool interest.")
+          msg ("Baron Friedrich: \"Ah, another guest. Tell me, in this game of shadows we all play at such parties...\"")
+          topics = Split ("I am a pawn;I am a knight;I am a king", ";")
+          ShowMenu ("\"...what piece are you?\"", topics, false) {
+            switch (result) {
+              case ("I am a pawn") {
+                msg ("Baron Friedrich snorts dismissively.<br/><br/>Baron Friedrich: \"A pawn? Pawns do not attend parties like this. They serve the drinks. You waste my time.\"<br/><br/>(Threat level increased)")
+                game.threat = game.threat + 1
+              }
+              case ("I am a knight") {
+                msg ("Baron Friedrich raises an eyebrow, intrigued.<br/><br/>Baron Friedrich: \"A knight? Interesting choice. The knight moves in unexpected ways, strikes from angles others cannot see. Perhaps you have some cleverness in you.\"<br/><br/>He gestures to the chess board.<br/><br/>Baron Friedrich: \"Prove it. Examine my game and tell me the winning move.\"")
+              }
+              case ("I am a king") {
+                msg ("Baron Friedrich laughs coldly.<br/><br/>Baron Friedrich: \"A king? Kings do not sneak into parties uninvited. And I can always tell who belongs and who does not.\"<br/><br/>He eyes you suspiciously.")
+              }
+            }
+          }
+        }
+      ]]></speak>
+    </object>
+    <object name="Chess Set">
+      <inherit name="editor_object" />
+      <look type="script"><![CDATA[
+        if (Baron Friedrich.isDistracted) {
+          msg ("The chess set remains in its mid-game position. The Baron left before finishing his analysis.")
+        }
+        else if (Baron Friedrich.hasBeenImpressed) {
+          msg ("The chess set shows the winning position you identified. The Baron was impressed by your insight.")
+        }
+        else {
+          msg ("An elegant chess set showing a complex mid-game position. White pieces (the Baron's side) appear to be in a strong position. Studying the board, you notice the white knight could deliver checkmate in two moves by moving to G7.<br/><br/>The Baron watches to see if you understand.")
+          topics = Split ("Knight to G7;Queen takes bishop;Castle kingside", ";")
+          ShowMenu ("What is the winning move?", topics, false) {
+            switch (result) {
+              case ("Knight to G7") {
+                msg ("Baron Friedrich: \"Knight to G7! Exactly correct. Checkmate in two moves.\"<br/><br/>He stands and offers his hand.<br/><br/>Baron Friedrich: \"You have a strategist's mind. I respect that. Perhaps we can help each other.\"<br/><br/>He leans closer.<br/><br/>Baron Friedrich: \"Giuseppe hides his secrets behind beautiful facades. Check behind the painting of my homeland - you may find something useful.\"")
+                Baron Friedrich.hasBeenImpressed = true
+              }
+              case ("Queen takes bishop") {
+                msg ("Baron Friedrich shakes his head.<br/><br/>Baron Friedrich: \"A crude move. The queen would be exposed. Think more carefully.\"")
+              }
+              case ("Castle kingside") {
+                msg ("Baron Friedrich laughs.<br/><br/>Baron Friedrich: \"Castle? In the middle of an attack? You disappoint me.\"")
+              }
+            }
+          }
+        }
+      ]]></look>
+    </object>
+    <object name="Diplomatic Papers">
+      <inherit name="editor_object" />
+      <look>Stacks of diplomatic correspondence in German and Italian. Most appear to be coded messages and official communications. You cannot make sense of them without more context.</look>
+    </object>
+    <object name="Painting of the Alps">
+      <inherit name="editor_object" />
+      <alias>Painting of the Austrian Alps</alias>
+      <hasBeenSearched type="boolean">false</hasBeenSearched>
+      <look type="script"><![CDATA[
+        if (this.hasBeenSearched) {
+          msg ("The painting of the Austrian Alps hangs properly now. You already found the hidden document behind it.")
+        }
+        else if (Baron Friedrich.hasBeenImpressed or Baron Friedrich.isDistracted) {
+          msg ("A beautiful painting of the Austrian Alps, hanging slightly askew. Following the Baron's hint (or taking advantage of his absence), you look behind it.<br/><br/>Hidden in a small pouch attached to the frame, you find a document: a detailed schedule of guard rotations in the Giuseppe estate.<br/><br/>This could be very useful for timing your movements through the basement.")
+          this.hasBeenSearched = true
+          AddToInventory (Guard Schedule)
+        }
+        else {
+          msg ("A beautiful painting of the Austrian Alps in winter. It hangs slightly askew on the wall. The Baron notices your interest and shifts slightly, blocking your view of it.")
+        }
+      ]]></look>
+    </object>
+    <object name="Guard Schedule">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <look>A detailed schedule showing guard rotations throughout the Giuseppe estate. Key information:<br/><br/>- Guards change shifts on the hour<br/>- The basement has reduced coverage during shift changes<br/>- The vault area is most vulnerable at midnight<br/><br/>This intelligence could be valuable for timing your movements.</look>
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+      </inventoryverbs>
+    </object>
+    <object name="Guest Registry Card">
+      <inherit name="editor_object" />
+      <isAltered type="boolean">false</isAltered>
+      <look type="script">
+        if (this.isAltered) {
+          msg ("The registry card now shows 'Chamber 1' instead of 'Chamber 2'. The Baron was quite confused when he noticed.")
+        }
+        else {
+          msg ("A guest registry card on the nightstand. It reads:<br/><br/>\"Baron Friedrich von Stein - Chamber 2\"<br/><br/>These cards are used to help guests find their assigned rooms.")
+        }
+      </look>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
+      <rewrite type="script"><![CDATA[
+        if (this.isAltered) {
+          msg ("You have already altered the registry card.")
+        }
+        else {
+          msg ("You use the Shkruesiverita to change 'Chamber 2' to 'Chamber 1'.<br/><br/>You place the card prominently on the nightstand and wait. The Baron eventually glances at it and frowns.<br/><br/>Baron Friedrich: \"Chamber 1? But I thought... No, I must be mistaken. These Italian houses are so confusing.\"<br/><br/>He gathers some of his papers.<br/><br/>Baron Friedrich: \"Excuse me. I must find my correct room.\"<br/><br/>He leaves, looking puzzled. You are now alone in the bedchamber.")
+          this.isAltered = true
+          Baron Friedrich.isDistracted = true
+        }
+      ]]></rewrite>
+    </object>
   </object>
   <object name="Bedchamber 3">
     <inherit name="editor_room" />
+    <description><![CDATA[An artistic chamber filled with musical chaos. This room has been assigned to {object:Maestro Enzo}, Venice's most celebrated composer.<br/><br/>{object:Sheet Music} is scattered everywhere. A {object:Violin} rests on a chair, and a {object:Metronome} ticks steadily on the nightstand. A {object:Composition Journal} lies on the bed.]]></description>
     <exit alias="west" to="Ballroom Second Floor">
       <inherit name="westdirection" />
     </exit>
+    <object name="Maestro Enzo">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alias>Maestro Enzo Cardinali</alias>
+      <isDistracted type="boolean">false</isDistracted>
+      <hasHeardMelody type="boolean">false</hasHeardMelody>
+      <look type="script">
+        if (this.isDistracted) {
+          msg ("The Maestro has left to perform in the Music Salon.")
+        }
+        else {
+          msg ("An eccentric elderly man with wild white hair and ink-stained fingers. He hums to himself while scribbling musical notes on any available surface. He cups his ear when you approach - clearly hard of hearing.")
+        }
+      </look>
+      <speak type="script"><![CDATA[
+        if (this.isDistracted) {
+          msg ("The Maestro is not here.")
+        }
+        else {
+          msg ("The Maestro squints at you and cups his ear.")
+          msg ("Maestro Enzo: \"Eh? What? Speak up!\"")
+          topics = Split ("Are you the famous composer;What are you working on;Do you enjoy working for Giuseppe", ";")
+          ShowMenu ("What would you like to say (loudly)?", topics, false) {
+            switch (result) {
+              case ("Are you the famous composer") {
+                msg ("Maestro Enzo: \"Famous? BAH! I am a prisoner of my own genius! Everyone wants a piece of Enzo Cardinali!\"<br/><br/>He waves his hands dramatically.")
+              }
+              case ("What are you working on") {
+                msg ("Maestro Enzo: \"A 'triumph' for our glorious host.\" He says this with barely concealed sarcasm. \"But my true notes - my important notes - I hide where only true musicians would find them.\"<br/><br/>He taps his nose mysteriously.")
+              }
+              case ("Do you enjoy working for Giuseppe") {
+                msg ("The Maestro's expression darkens.<br/><br/>Maestro Enzo: \"Giuseppe CAGED my masterpiece. Locked away my greatest work because it did not flatter him enough. I am trapped here, composing lies.\"<br/><br/>He looks profoundly sad for a moment before returning to his manic energy.")
+              }
+            }
+          }
+        }
+      ]]></speak>
+    </object>
+    <object name="Sheet Music">
+      <inherit name="editor_object" />
+      <alias>Sheet Music - Giuseppe's Triumph</alias>
+      <look><![CDATA[Scattered sheet music for a piece titled "Giuseppe's Triumph." As you examine it, you notice certain notes have been circled in red ink:<br/><br/>C - A - G - E<br/><br/>The circled notes spell "CAGE." The Maestro mentioned being caged by Giuseppe... Perhaps this is a clue?]]></look>
+    </object>
+    <object name="Violin">
+      <inherit name="editor_object" />
+      <look>A beautiful violin resting on a velvet-cushioned chair. It looks well-used and clearly treasured by the Maestro.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Play</value>
+      </displayverbs>
+      <play type="script"><![CDATA[
+        if (Maestro Enzo.isDistracted) {
+          msg ("With the Maestro gone, you could play freely, but there seems to be no need now.")
+        }
+        else {
+          msg ("You pick up the violin. The Maestro watches with sudden interest, his hearing apparently sharp enough for music.")
+          topics = Split ("Play C-A-G-E;Play a random melody;Play nothing and put it down", ";")
+          ShowMenu ("What would you like to play?", topics, false) {
+            switch (result) {
+              case ("Play C-A-G-E") {
+                msg ("You carefully play the notes C, A, G, and E in sequence.<br/><br/>The Maestro's eyes widen. Tears begin to form.<br/><br/>Maestro Enzo: \"That melody... that is from my caged masterpiece. How did you know?\"<br/><br/>He grasps your arm with surprising strength.<br/><br/>Maestro Enzo: \"You understand. You are a true musician. Giuseppe locked away my life's work because it spoke truth about his corruption. The third number of his vault combination - I saw it once - it is 2. Use it to expose him!\"<br/><br/>He releases you, looking drained but somehow lighter.")
+                Maestro Enzo.hasHeardMelody = true
+                set (player, "knowsVaultThirdDigit", true)
+              }
+              case ("Play a random melody") {
+                msg ("You play a few random notes. The Maestro winces.<br/><br/>Maestro Enzo: \"BAH! That is not music! That is noise!\"<br/><br/>He waves you away irritably.<br/><br/>(Threat level increased)")
+                game.threat = game.threat + 1
+              }
+              case ("Play nothing and put it down") {
+                msg ("You carefully set the violin back down. The Maestro looks disappointed.")
+              }
+            }
+          }
+        }
+      ]]></play>
+    </object>
+    <object name="Metronome">
+      <inherit name="editor_object" />
+      <isOpen type="boolean">false</isOpen>
+      <look type="script">
+        if (this.isOpen) {
+          msg ("The metronome sits open, its hidden compartment revealed. Inside you found the third vault digit.")
+        }
+        else if (Maestro Enzo.isDistracted) {
+          msg ("A brass metronome ticking steadily at 120 BPM. With the Maestro gone, you notice the base looks slightly loose, as if it conceals a hidden compartment.")
+        }
+        else {
+          msg ("A brass metronome ticking steadily at 120 BPM. It sits on the nightstand, keeping perfect time.")
+        }
+      </look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+        <value>Open</value>
+      </displayverbs>
+      <open type="script"><![CDATA[
+        if (this.isOpen) {
+          msg ("You have already opened the metronome.")
+        }
+        else if (not Maestro Enzo.isDistracted) {
+          msg ("You reach for the metronome but the Maestro slaps your hand away.<br/><br/>Maestro Enzo: \"Do not touch my instruments!\"<br/><br/>(Threat level increased)")
+          game.threat = game.threat + 2
+        }
+        else {
+          msg ("You examine the metronome's base and find a small hidden compartment. Inside is a folded piece of paper.<br/><br/>The paper reads: \"Third: 2\"<br/><br/>Beneath it, in the Maestro's handwriting: \"Giuseppe thinks he owns art itself. The combination to his vanity - the vault - I glimpsed it. Let someone worthy use this.\"")
+          this.isOpen = true
+          set (player, "knowsVaultThirdDigit", true)
+        }
+      ]]></open>
+    </object>
+    <object name="Composition Journal">
+      <inherit name="editor_object" />
+      <look type="script">
+        if (Maestro Enzo.isDistracted) {
+          msg ("A leather-bound journal filled with musical notations and bitter observations about Giuseppe. Among the pages you find a performance schedule.")
+          MakeObjectVisible (Performance Schedule)
+        }
+        else {
+          msg ("A thick leather-bound journal covered in musical notations. The Maestro guards it possessively.")
+        }
+      </look>
+    </object>
+    <object name="Performance Schedule">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <isAltered type="boolean">false</isAltered>
+      <look type="script">
+        if (this.isAltered) {
+          msg ("The schedule now shows an immediate performance in the Music Salon. The Maestro has already left.")
+        }
+        else {
+          msg ("A schedule of musical performances for the party. One entry shows:<br/><br/>\"Maestro Enzo Cardinali - Music Salon Performance - Midnight\"<br/><br/>That is still hours away...")
+        }
+      </look>
+      <take />
+      <drop type="boolean">false</drop>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+      </inventoryverbs>
+      <rewrite type="script"><![CDATA[
+        if (this.isAltered) {
+          msg ("You have already altered the schedule.")
+        }
+        else {
+          msg ("You use the Shkruesiverita to change the performance time to 'NOW - IMMEDIATELY'.<br/><br/>A servant knocks at the door moments later.<br/><br/>Servant: \"Maestro Cardinali? The guests are assembled in the Music Salon for your performance.\"<br/><br/>Maestro Enzo: \"What? Now? But I am not prepared!\"<br/><br/>Servant: \"The schedule says immediately, Maestro. They are waiting.\"<br/><br/>The Maestro grumbles but gathers his violin and shuffles out, muttering about incompetent schedulers.<br/><br/>You are now alone in the bedchamber.")
+          this.isAltered = true
+          Maestro Enzo.isDistracted = true
+        }
+      ]]></rewrite>
+    </object>
   </object>
   <object name="Study">
     <inherit name="editor_room" />
@@ -744,7 +1600,7 @@
             }
           }
         }
-        if (player.knowsVaultFirstDigit and player.knowsVaultLastDigit) {
+        if (player.knowsVaultFirstDigit and player.knowsVaultSecondDigit and player.knowsVaultThirdDigit and player.knowsVaultLastDigit) {
           unlockedoptions = Split ("5723", ";")
           ShowMenu ("Unlocked Option:", unlockedoptions, false) {
             switch (result) {
@@ -754,6 +1610,12 @@
               }
             }
           }
+        }
+        else if (player.knowsVaultFirstDigit and player.knowsVaultLastDigit) {
+          msg ("You know the first digit is 5 and the last digit is 3, but you still need to discover the middle two digits before you can attempt the full combination.")
+        }
+        else if (player.knowsVaultFirstDigit or player.knowsVaultSecondDigit or player.knowsVaultThirdDigit or player.knowsVaultLastDigit) {
+          msg ("You have discovered some digits of the vault combination, but not all four. Keep searching for clues.")
         }
       ]]></script>
     </exit>
@@ -971,6 +1833,21 @@
     <property>putitemthrough</property>
     <pattern>put item through</pattern>
     <defaultexpression>WriteVerb(game.pov, "can't") + " put item through " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>search</property>
+    <pattern>search</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " search " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>open</property>
+    <pattern>open</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " open " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>play</property>
+    <pattern>play</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " play " + object.article + "."</defaultexpression>
   </verb>
   <turnscript name="Guard Check">
     <enabled />

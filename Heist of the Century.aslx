@@ -24,11 +24,21 @@
     ]]></start>
     <roomenter type="script">
       if (game.threat = 10) {
-        msg ("You are being pursued by guards.")
-        msg ("You have 2 actions before the guards catch up.")
-        game.guardTimer = 3
+        if (player.parent.name = this.lastRoom) {
+          msg ("The guards have caught up to you, and you are thrown in the building's cellar to rot forever.")
+          finish
+        }
+        else {
+          msg ("You are being pursued by guards, you cannot return to the room you came from, lest you get caught.")
+          msg ("You have 2 actions before the guards catch up.")
+          game.guardTimer = 3
+          this.lastRoom = this.currentRoom
+          this.currentRoom = player.parent.name
+        }
       }
     </roomenter>
+    <lastRoom type="string"></lastRoom>
+    <currentRoom type="string"></currentRoom>
     <object name="Shining Key">
       <inherit name="editor_object" />
       <look>A shining key, quite hard to hide from anyone looking at you.</look>
@@ -40,9 +50,6 @@
       <take />
     </object>
   </game>
-  <object name="test room">
-    <inherit name="editor_room" />
-  </object>
   <verb>
     <property>increasethreat</property>
     <pattern>increase threat</pattern>
@@ -113,50 +120,6 @@
         <look>Your coat.</look>
         <drop type="boolean">false</drop>
       </object>
-    </object>
-    <object name="Test Threat Increaser">
-      <inherit name="editor_object" />
-      <displayverbs type="stringlist">
-        <value>Increase Threat</value>
-        <value>Check Threat</value>
-      </displayverbs>
-      <useindividualverblist />
-      <increasethreat type="script">
-        game.threat = game.threat + 15
-        msg ("Your threat is: " + game.threat)
-      </increasethreat>
-      <checkthreat type="script"><![CDATA[
-        if (game.threat > 90) {
-          msg ("Your threat is larger than 90")
-        }
-        else if (game.threat > 80) {
-          msg ("Your threat is larger than 80")
-        }
-        else if (game.threat > 70) {
-          msg ("Your threat is larger than 70")
-        }
-        else if (game.threat > 60) {
-          msg ("Your threat is larger than 60")
-        }
-        else if (game.threat > 50) {
-          msg ("Your threat is larger than 50")
-        }
-        else if (game.threat > 40) {
-          msg ("Your threat is larger than 40")
-        }
-        else if (game.threat > 30) {
-          msg ("Your threat is larger than 30")
-        }
-        else if (game.threat > 20) {
-          msg ("Your threat is larger than 20")
-        }
-        else if (game.threat > 10) {
-          msg ("Your threat is larger than 10")
-        }
-        else {
-          msg ("Your threat is larger than 0")
-        }
-      ]]></checkthreat>
     </object>
     <object name="Drunk Nobleman">
       <inherit name="editor_object" />
@@ -884,27 +847,39 @@
       <isFree type="boolean">false</isFree>
       <speak type="script"><![CDATA[
         msg ("You approach the Dungeon Prisoner")
-        topics = Split ("Are you ok;What is your name;Why are you in here", ";")
-        ShowMenu ("What do you want to ask?", topics, false) {
-          switch (result) {
-            case ("What is your name") {
-              msg ("Dungeon Prisoner: \"I am Antonio De Luca\"")
-            }
-            case ("Why are you in here") {
-              msg ("Dungeon Prisoner: \"I'm in here because I dared to go up against Guido Giusseppe.\"<br/><br/>He sighs...<br/><br/>Dungeon Prisoner: \"Guido Giusseppe is a corrupt monster who will do anything to stay in power. He was going to destroy my business and leave me in ruin. We used to be business partners, before I realized his corruptness and thirst for power. I heard he was hosting this party and came to confront him. He did not care at all. He ordered one of his men to send me down here, and here I am. I know a few of his secrets. Perhaps that is why I am down here.\"<br/><br/>You feel a sense of sympathy for this man.<br/><br/>You might want to ask what secrets he knows...")
-              set (Dungeon Prisoner, "askedWhyHere", true)
-            }
-            case ("Are you ok") {
-              msg ("Duneon Prisoner: \"I am in quite a bit of pain after the guards subdued me. I did not go down without a fight. I just want to get out of here and go home.\"")
+        if (this.askedWhyHere = false) {
+          topics = Split ("Are you ok;What is your name;Why are you in here", ";")
+          ShowMenu ("What do you want to ask?", topics, false) {
+            switch (result) {
+              case ("What is your name") {
+                msg ("Dungeon Prisoner: \"I am Antonio De Luca\"")
+              }
+              case ("Why are you in here") {
+                msg ("Dungeon Prisoner: \"I'm in here because I dared to go up against Guido Giusseppe.\"<br/><br/>He sighs...<br/><br/>Dungeon Prisoner: \"Guido Giusseppe is a corrupt monster who will do anything to stay in power. He was going to destroy my business and leave me in ruin. We used to be business partners, before I realized his corruptness and thirst for power. I heard he was hosting this party and came to confront him. He did not care at all. He ordered one of his men to send me down here, and here I am. I know a few of his secrets. Perhaps that is why I am down here.\"<br/><br/>You feel a sense of sympathy for this man.<br/><br/>You might want to ask what secrets he knows...")
+                set (Dungeon Prisoner, "askedWhyHere", true)
+              }
+              case ("Are you ok") {
+                msg ("Dungeon Prisoner: \"I am in quite a bit of pain after the guards subdued me. I did not go down without a fight. I just want to get out of here and go home.\"")
+              }
             }
           }
         }
-        if (this.askedWhyHere) {
-          unlockedOptions = Split ("What secrets do you know;", ";")
-          ShowMenu ("Unlocked Dialogue Options:", unlockedOptions, false) {
+        else {
+          unlockedOptions = Split ("What secrets do you know;Are you ok;What is your name;Why are you in here", ";")
+          ShowMenu ("What do you want to ask?", unlockedOptions, false) {
             switch (result) {
               case ("What secrets do you know") {
-                msg ("Dungeon Prisoner: \"I know the corrupt actions he has taken to rise to power. I know where he likes to visit and the people he speaks to. Nothing of use I suppose... Though I do know a digit for the combination of that Vault you might have seen. I was down here with him before and a managed to catch a glimpse. I can tell you it if you help get me out of here.\"<br/><br/>You are intrigued...<br/><br/>Dungeon Prisoner: \"The guard that put me in here left the key inside the pocket of his coat. He also mentioned he was taking a break to linger around the party. Though I think I heard him near here somewhere. He can get quite loud. Maybe you can get that key somehow?\"")
+                msg ("Dungeon Prisoner: \"I know the corrupt actions he has taken to rise to power. I know where he likes to visit and the people he speaks to. Nothing of use I suppose... Though I do know a digit for the combination of that Vault you might have seen. I was down here with him before and I managed to catch a glimpse. I can tell you it if you help get me out of here.\"<br/><br/>You are intrigued...<br/><br/>Dungeon Prisoner: \"The guard that put me in here left the key inside the pocket of his coat. He also mentioned he was taking a break to linger around the party. Though I think I heard him near here somewhere. He can get quite loud. Maybe you can get that key somehow?\"")
+              }
+              case ("What is your name") {
+                msg ("Dungeon Prisoner: \"I am Antonio De Luca\"")
+              }
+              case ("Why are you in here") {
+                msg ("Dungeon Prisoner: \"I'm in here because I dared to go up against Guido Giusseppe.\"<br/><br/>He sighs...<br/><br/>Dungeon Prisoner: \"Guido Giusseppe is a corrupt monster who will do anything to stay in power. He was going to destroy my business and leave me in ruin. We used to be business partners, before I realized his corruptness and thirst for power. I heard he was hosting this party and came to confront him. He did not care at all. He ordered one of his men to send me down here, and here I am. I know a few of his secrets. Perhaps that is why I am down here.\"<br/><br/>You feel a sense of sympathy for this man.<br/><br/>You might want to ask what secrets he knows...")
+                set (Dungeon Prisoner, "askedWhyHere", true)
+              }
+              case ("Are you ok") {
+                msg ("Dungeon Prisoner: \"I am in quite a bit of pain after the guards subdued me. I did not go down without a fight. I just want to get out of here and go home.\"")
               }
             }
           }
@@ -923,16 +898,16 @@
       <inherit name="container_open" />
       <look>You see a filing cabinet in the corner of the room. There are various drawers containing all sorts of documents and papers.</look>
       <feature_container />
-      <onopen type="script"><![CDATA[
-        msg ("You look through the various drawers in the Filing Cabinet<br/><br/>After some time looking through the various documents, you find what you are looking for.<br/><br/>You pull out the very documents that have ruined your family's name. Guido Giusseppe's corrupt actions have produced these falsified documents.<br/><br/>You now have them in your hands...")
-        AddToInventory (Forger Family Documents)
-      ]]></onopen>
       <displayverbs type="stringlist">
         <value>Look at</value>
         <value>Open</value>
         <value>Close</value>
       </displayverbs>
       <isopen type="boolean">false</isopen>
+      <onopen type="script"><![CDATA[
+        msg ("You look through the various drawers in the Filing Cabinet<br/><br/>After some time looking through the various documents, you find what you are looking for.<br/><br/>You pull out the very documents that have ruined your family's name. Guido Giusseppe's corrupt actions have produced these falsified documents.<br/><br/>You now have them in your hands...")
+        AddToInventory (Forger Family Documents)
+      ]]></onopen>
       <object name="Forger Family Documents">
         <inherit name="editor_object" />
         <look>The very documents that led to the downfall of your family's status. You now have the fate of your family in your hands.</look>
@@ -977,8 +952,8 @@
     <script>
       if (game.threat = 10) {
         if (game.guardTimer = 0) {
-          undo
-          msg ("The guards would catch you if you stayed any longer")
+          msg ("The guards have caught up to you, and you are thrown in the building's cellar to rot forever.")
+          finish
         }
         else {
           game.guardTimer = game.guardTimer - 1

@@ -849,7 +849,7 @@
     <description>The Giusseppe estate has a second floor to it with another ballroom. It's expensive decorations line the walls, ceiling, and floor. The upstairs ballroom is crowded with people, with many touring the various bedrooms.</description>
     <enter type="script"><![CDATA[
       if (Got(Shining Key) and this.isHostile) {
-        msg ("As you walk into the ballroom, people begin to take notice to the bright light emitted from your pocket. One of the guests approaches you.")
+        msg ("As you walk into the ballroom, people begin to take notice to the bright light emitting from your pocket. One of the guests approaches you.")
         topics = Split ("I have a bomb;I ate the Sun;It's my magic watch;Stay silent", ";")
         ShowMenu ("\"What is that in your pocket good sir?\"", topics, false) {
           switch (result) {
@@ -1387,7 +1387,7 @@
   </object>
   <object name="Study">
     <inherit name="editor_room" />
-    <description>A study, crowded with guests. Bookshelves line the walls of this study.</description>
+    <description>A study, crowded with guests. Bookshelves line the walls, and many classics can be found among the catalog. Such a room should reflect well on its owner, although the dust implies it sees far less use than one might expect.</description>
     <exit alias="east" to="Ballroom Second Floor">
       <inherit name="eastdirection" />
     </exit>
@@ -1397,7 +1397,7 @@
       <displayverbs type="stringlist">
         <value>Look at</value>
       </displayverbs>
-      <look>A poster showcasing the times of various events occuring during the party. There is a speech being held later later into the night by the host himself.</look>
+      <look>A poster showcasing the times of various events occuring during the party. There is a speech being held later later into the night by the host himself, an event no one would want to miss.</look>
       <isDistracted type="boolean">false</isDistracted>
       <rewrite type="script">
         msg ("You rewrite the time of the host's speech to be in only a couple of minutes. As the guests in the room take notice, they begin to leave, heading for the ballroom.")
@@ -1410,13 +1410,14 @@
       <lookunder type="script">
         if (Poster.isDistracted) {
           AddToInventory (Shining Key)
-          msg ("There was a shiny key underneath the potted plant. It would be hard to hide from people looking at you.")
+          msg ("There was a shiny key underneath the potted plant, bright enough to burn colors in your eyes. Its extravagance is far beyond that of luxury, and it occurs to you that such a uselessly golden key must belong to the lock of the master bedroom. It would be hard to hide the key from people looking at you.")
           this.isDistracted = false
         }
         else {
           msg ("It would be suspicious to do so while people are nearby.")
         }
       </lookunder>
+      <look>An inconspicious potted plant, placed a bit too far away from the window. Despite its withered appearance, it appears to be actively tended to, as the dust settled around the room has been cleared from around its base.</look>
     </object>
     <object name="Books">
       <inherit name="editor_object" />
@@ -1436,7 +1437,7 @@
               msg ("A book on better ways to spend your time, encouraging meaningful hobbies and better time management skills.")
             }
             case ("Read red book") {
-              msg ("You hear something move as you pick up the book, and as you skim the pages, you notice it is entirely blank.")
+              msg ("You hear something move as you pick up the book, and as you skim the pages, you notice it is entirely blank. Putting the book down, you see that a secret tunnel has revealed itself.")
               set (Secret Passage, "visible", true)
               if (Poster.isDistracted = false) {
                 game.threat = game.threat + 2
@@ -1455,20 +1456,21 @@
     <object name="Secret Passage">
       <inherit name="editor_object" />
       <visible type="boolean">false</visible>
-      <look>A small, narrow passage looking directly into the bathroom on the other side. You question the intent of installing such a thing.</look>
+      <look>A small, narrow passage looking directly into the bathroom on the other side. You would question the intent of installing such a thing, but you already know what kind of man Guido Giusseppe is.</look>
       <displayverbs type="stringlist">
         <value>Look at</value>
       </displayverbs>
       <putitemthrough type="scriptdictionary">
         <item key="Shining Key">
           MoveObject (Shining Key, Bathroom)
+          msg ("You push the shining key through the passage, and hear it fall into the bathroom on the other side.")
         </item>
       </putitemthrough>
     </object>
   </object>
   <object name="Bathroom">
     <inherit name="editor_room" />
-    <description><![CDATA[The Bathroom of the Giuseppe estate's second floor. Even for such a room there are many expensive items and decorations around. <br/><br/>This room also appears to be connected to the Master Bedroom of this estate...]]></description>
+    <description><![CDATA[The Bathroom of the Giuseppe estate's second floor. Even for such a room there are many expensive items and decorations around. <br/><br/>This room also appears to be connected to the Master Bedroom of this estate, although it is locked as always...]]></description>
     <exit alias="northeast" to="Ballroom Second Floor">
       <inherit name="northeastdirection" />
     </exit>

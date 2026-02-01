@@ -343,6 +343,7 @@
     <firstenter type="script"><![CDATA[
       msg ("With the altered Party Invitation showing your name, you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Welcome to the Party Mr. Forger, I hope you enjoy the festivities\"<br/><br/>With that you have successfully made it into the Giusseppe estate.")
     ]]></firstenter>
+    <description><![CDATA[You find yourself in the Main Ballroom. Various expensive decorations line the walls of this room. A beautifull chandelier hangs from the ceiling. There a many guests conversing, drinking, and dancing. There are various rooms that are connected to this central hub.<br/><br/>In the middle of the room you can see {object:Guido Giusseppe} himself. ]]></description>
     <exit alias="south" to="Entrance">
       <inherit name="southdirection" />
     </exit>
@@ -361,6 +362,28 @@
     <exit alias="up" to="Ballroom Second Floor">
       <inherit name="updirection" />
     </exit>
+    <object name="Guido Giusseppe">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <look>The man himself. He is directly responsible for your family's downfall. Here he is enjoying the party looking smug. He is dressed in expensive clothing.</look>
+      <speak type="script"><![CDATA[
+        msg ("You approach him. He does not seem to recognize you.")
+        topics = Split ("You have ruined my family's name. I will have my revenge;This is a great party;This party is boring", ";")
+        switch (result) {
+          case ("You have ruined my family's name. I will have my revenge") {
+            msg ("Guido Giusseppe: \"And who might you be?\"<br/><br/>You tell him your name is Dinak Forger<br/><br/>Guido Giusseppe: \"Ah yes, the Forger Family. Your family's downfall was very satisfying to watch. I assume you are here to enact your revenge. You have made a grave mistake by trying to confront me. Guards, sieze this man\"<br/><br/>(Threat Level Maxed)")
+            game.threat = game.threat  = 10
+          }
+          case ("This is a great party") {
+            msg ("Guido Giusseppe: \"Of course, this is the 'Party of the Century' after all. I spared no expense for the festivities.\"")
+          }
+          case ("This party is boring") {
+            msg ("He scoffs...<br/><br/>Guido Giusseppe: \"And who are you? You clearly have no taste for great parties if you are thinking that. I suggest you go somewhere else if you feel that way.\"<br/><br/>There is a slight look of dismay in his face.<br/><br/>(Threat Level increased)")
+            game.threat = game.threat + 1
+          }
+        }
+      ]]></speak>
+    </object>
   </object>
   <object name="Gallery">
     <inherit name="editor_room" />
@@ -623,9 +646,24 @@
   </object>
   <object name="Music Salon">
     <inherit name="editor_room" />
+    <description>Across the Main Ballroom there is a Music Salon. Various musicians appear here with their instruments. They continuously play traditional Italian music and occasionally other European classics for the pleasure of the party's guests. </description>
     <exit alias="southeast" to="Main Ballroom">
       <inherit name="southeastdirection" />
     </exit>
+    <object name="Musicians">
+      <inherit name="editor_object" />
+      <inherit name="maleplural" />
+      <look>You see various musicians playing their instruments. They are very talented and play with passion.</look>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <listen type="script"><![CDATA[
+        msg ("You take a moment to appreciate the music at the party. Listening to the various instruments at work. You blend in with the various guests also appreciating the music.<br/><br/>(Threat Level Decreased)")
+        if (game.threat > 0) {
+          game.threat = game.threat - 1
+        }
+      ]]></listen>
+    </object>
   </object>
   <object name="Kitchen">
     <inherit name="editor_room" />
@@ -636,6 +674,7 @@
     <exit name="basementEntrance" alias="down" to="Basement Entrance">
       <inherit name="downdirection" />
       <runscript />
+      <isLocked />
       <script type="script">
         if (this.isLocked) {
           msg ("The way is blocked by the kitchen staff.")
@@ -644,7 +683,6 @@
           MoveObject (player, Basement Entrance)
         }
       </script>
-      <isLocked />
     </exit>
     <object name="Head Chef">
       <inherit name="editor_object" />
@@ -755,6 +793,7 @@
         <value>Give</value>
       </inventoryverbs>
       <feature_usegive />
+      <givesingle />
       <look type="script">
         if (this.isAltered) {
           msg ("The jar now reads 'Saffron' thanks to the Shkruesiverita. The Head Chef would be very grateful for this.")
@@ -772,6 +811,8 @@
           this.isAltered = true
         }
       </rewrite>
+      <givetoanything type="script">
+      </givetoanything>
       <giveto type="scriptdictionary">
         <item key="Head Chef"><![CDATA[
           if (Turmeric Jar.isAltered) {
@@ -785,9 +826,6 @@
           }
         ]]></item>
       </giveto>
-      <givesingle />
-      <givetoanything type="script">
-      </givetoanything>
     </object>
     <object name="ServantLedger">
       <inherit name="editor_object" />
@@ -801,6 +839,8 @@
         <value>Give</value>
       </inventoryverbs>
       <feature_usegive />
+      <alias>Servant's Ledger</alias>
+      <givesingle />
       <look type="script"><![CDATA[
         if (this.isAltered) {
           msg ("The ledger now shows Lucia's debt as 'PAID IN FULL'. She must be overjoyed.")
@@ -831,8 +871,6 @@
           }
         ]]></item>
       </giveto>
-      <alias>Servant's Ledger</alias>
-      <givesingle />
     </object>
     <object name="Service Menu">
       <inherit name="editor_object" />
@@ -1407,6 +1445,7 @@
     </object>
     <object name="Potted Plant">
       <inherit name="editor_object" />
+      <look>An inconspicious potted plant, placed a bit too far away from the window. Despite its withered appearance, it appears to be actively tended to, as the dust settled around the room has been cleared from around its base.</look>
       <lookunder type="script">
         if (Poster.isDistracted) {
           AddToInventory (Shining Key)
@@ -1417,7 +1456,6 @@
           msg ("It would be suspicious to do so while people are nearby.")
         }
       </lookunder>
-      <look>An inconspicious potted plant, placed a bit too far away from the window. Despite its withered appearance, it appears to be actively tended to, as the dust settled around the room has been cleared from around its base.</look>
     </object>
     <object name="Books">
       <inherit name="editor_object" />
@@ -1518,9 +1556,21 @@
   </object>
   <object name="Lounge">
     <inherit name="editor_room" />
+    <description>The Lounge at the second floor of the estate is a nice, calm place to relax at the party. There are a few guests here taking a moment to relax from the party.</description>
     <exit alias="northwest" to="Ballroom Second Floor">
       <inherit name="northwestdirection" />
     </exit>
+    <object name="Guests">
+      <inherit name="editor_object" />
+      <inherit name="maleplural" />
+      <look>You see various guests conversing and relaxing from the party.</look>
+      <speak type="script"><![CDATA[
+        msg ("You take a moment to converse with the various guests at the party. You blend in with the multiple guests and talk about many different things.<br/><br/>(Theat Level Decreased)")
+        if (game.threat > 0) {
+          game.threat = game.threat - 1
+        }
+      ]]></speak>
+    </object>
   </object>
   <object name="Basement Entrance">
     <inherit name="editor_room" />

@@ -185,6 +185,11 @@
               set (Baron Friedrich, "isDistracted", true)
             }
           ]]></item>
+          <item key="Poster">
+            msg ("You rewrite the time of the host's speech to be in only a couple of minutes. As the guests in the room take notice, they begin to leave, heading for the ballroom.")
+            set (Poster, "isDistracted", true)
+            RemoveObject (Poster)
+          </item>
         </selfuseon>
       </object>
       <object name="Coat">
@@ -340,10 +345,10 @@
   </object>
   <object name="Main Ballroom">
     <inherit name="editor_room" />
+    <description><![CDATA[You find yourself in the Main Ballroom. Various expensive decorations line the walls of this room. A beautifull chandelier hangs from the ceiling. There a many guests conversing, drinking, and dancing. There are various rooms that are connected to this central hub.<br/><br/>In the middle of the room you can see {object:Guido Giusseppe} himself. ]]></description>
     <firstenter type="script"><![CDATA[
       msg ("With the altered Party Invitation showing your name, you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Welcome to the Party Mr. Forger, I hope you enjoy the festivities\"<br/><br/>With that you have successfully made it into the Giusseppe estate.")
     ]]></firstenter>
-    <description><![CDATA[You find yourself in the Main Ballroom. Various expensive decorations line the walls of this room. A beautifull chandelier hangs from the ceiling. There a many guests conversing, drinking, and dancing. There are various rooms that are connected to this central hub.<br/><br/>In the middle of the room you can see {object:Guido Giusseppe} himself. ]]></description>
     <exit alias="south" to="Entrance">
       <inherit name="southdirection" />
     </exit>
@@ -461,24 +466,6 @@
           msg ("A stunning portrait of a Venetian Duke in ceremonial robes, displayed behind a velvet rope in the restricted area. The guard watches it closely.<br/><br/>Something about the painting seems strangely familiar to you...")
         }
       ]]></look>
-      <rewrite type="script"><![CDATA[
-        if (Gallery Guard.isDistracted) {
-          if (this.hasBeenExamined) {
-            msg ("You have already revealed the hidden message.")
-          }
-          else {
-            msg ("You use the Shkruesiverita on the painting, focusing on the areas where the brushwork seems uneven...<br/><br/>The magic of the pencil reveals text hidden beneath layers of paint:<br/><br/>\"To my heir: Trust in the family motto. The truth lies beneath the lies. - Grandfather Forger\"<br/><br/>Moved by this message from your grandfather, you examine the frame more carefully and discover a hidden compartment behind it.<br/><br/>Inside you find a Forger Family Signet Ring and a faded letter.")
-            this.hasBeenExamined = true
-            AddToInventory (Forger Family Signet Ring)
-            AddToInventory (Faded Letter)
-            MakeObjectVisible (Forger Family Signet Ring)
-            MakeObjectVisible (Faded Letter)
-          }
-        }
-        else {
-          msg ("You cannot get close enough to the painting with the guard watching. You need to find a way to distract him first.")
-        }
-      ]]></rewrite>
     </object>
     <object name="Bronze Sculpture">
       <inherit name="editor_object" />
@@ -496,16 +483,6 @@
           msg ("A leather-bound guest book where notable visitors sign their names. You see signatures from various nobles, artists, and dignitaries who have viewed the collection.<br/><br/>The book sits on a small podium near the entrance.")
         }
       ]]></look>
-      <rewrite type="script"><![CDATA[
-        if (this.isAltered) {
-          msg ("You have already altered the guest book.")
-        }
-        else {
-          msg ("You use the Shkruesiverita to add a new entry to the guest book:<br/><br/>\"Inspector Marcello Ricci - Ministry of Cultural Affairs - Conducting Surprise Audit\"<br/><br/>You step back and wait. The guard glances at the book out of habit and his face goes pale.<br/><br/>Gallery Guard: \"An inspector? Here? Now? I must inform Signor Giuseppe immediately!\"<br/><br/>He rushes out of the gallery. The art critic, delighted by the chaos, hurries off to examine other paintings she couldn't access before.<br/><br/>The restricted area is now unguarded.")
-          this.isAltered = true
-          Gallery Guard.isDistracted = true
-        }
-      ]]></rewrite>
     </object>
     <object name="Velvet Rope">
       <inherit name="editor_object" />
@@ -802,15 +779,6 @@
           msg ("A glass jar containing bright yellow turmeric powder. The label clearly reads 'Turmeric'. It looks somewhat similar to saffron...")
         }
       </look>
-      <rewrite type="script">
-        if (this.isAltered) {
-          msg ("You have already changed the label.")
-        }
-        else {
-          msg ("You use the Shkruesiverita to carefully alter the label from 'Turmeric' to 'Saffron'. The powder inside looks convincing enough...")
-          this.isAltered = true
-        }
-      </rewrite>
       <givetoanything type="script">
       </givetoanything>
       <giveto type="scriptdictionary">
@@ -849,15 +817,6 @@
           msg ("A thick ledger book tracking the debts of all servants in the household. Flipping through, you find many names with crushing amounts owed.<br/><br/>One entry catches your eye:<br/><br/>\"Lucia Benedetti - Owes: 500 Lira - Interest accruing\"<br/><br/>The poor woman was telling the truth. Giuseppe keeps his servants trapped through debt.")
         }
       ]]></look>
-      <rewrite type="script"><![CDATA[
-        if (this.isAltered) {
-          msg ("You have already altered Lucia's entry.")
-        }
-        else {
-          msg ("You use the Shkruesiverita to alter Lucia's entry:<br/><br/>From: \"Lucia Benedetti - Owes: 500 Lira - Interest accruing\"<br/>To: \"Lucia Benedetti - Owes: 0 Lira - PAID IN FULL\"<br/><br/>The ink shimmers and settles into place. As far as this ledger is concerned, Lucia is free.")
-          this.isAltered = true
-        }
-      ]]></rewrite>
       <giveto type="scriptdictionary">
         <item key="Young Servant"><![CDATA[
           if (this.isAltered) {
@@ -1053,16 +1012,6 @@
           msg ("A schedule of events for the party. One entry is relevant:<br/><br/>\"Countess Valentina Morosini - Portrait Sitting in Gallery - 11:00 PM\"<br/><br/>That is still a while away. If only the time could be changed...")
         }
       ]]></look>
-      <rewrite type="script"><![CDATA[
-        if (this.isAltered) {
-          msg ("You have already altered the schedule.")
-        }
-        else {
-          msg ("You use the Shkruesiverita to change the time of the portrait sitting from '11:00 PM' to 'NOW - IMMEDIATELY'.<br/><br/>A servant appears at the door moments later.<br/><br/>Servant: \"Countess Morosini? The artist is ready for your portrait sitting in the Gallery.\"<br/><br/>Countess Valentina: \"What? Already? The schedule said 11:00!\"<br/><br/>Servant: \"I apologize, signora, but the schedule clearly says immediately. The artist is waiting.\"<br/><br/>The Countess huffs indignantly but leaves the room, muttering about incompetent staff.<br/><br/>You are now alone in the bedchamber.")
-          this.isAltered = true
-          Countess Valentina.isDistracted = true
-        }
-      ]]></rewrite>
     </object>
     <object name="Traveling Trunk">
       <inherit name="editor_object" />
@@ -1254,16 +1203,6 @@
           msg ("A guest registry card on the nightstand. It reads:<br/><br/>\"Baron Friedrich von Stein - Chamber 2\"<br/><br/>These cards are used to help guests find their assigned rooms.")
         }
       ]]></look>
-      <rewrite type="script"><![CDATA[
-        if (this.isAltered) {
-          msg ("You have already altered the registry card.")
-        }
-        else {
-          msg ("You use the Shkruesiverita to change 'Chamber 2' to 'Chamber 1'.<br/><br/>You place the card prominently on the nightstand and wait. The Baron eventually glances at it and frowns.<br/><br/>Baron Friedrich: \"Chamber 1? But I thought... No, I must be mistaken. These Italian houses are so confusing.\"<br/><br/>He gathers some of his papers.<br/><br/>Baron Friedrich: \"Excuse me. I must find my correct room.\"<br/><br/>He leaves, looking puzzled. You are now alone in the bedchamber.")
-          this.isAltered = true
-          Baron Friedrich.isDistracted = true
-        }
-      ]]></rewrite>
     </object>
   </object>
   <object name="Bedchamber 3">
@@ -1411,16 +1350,6 @@
           msg ("A schedule of musical performances for the party. One entry shows:<br/><br/>\"Maestro Enzo Cardinali - Music Salon Performance - Midnight\"<br/><br/>That is still hours away...")
         }
       ]]></look>
-      <rewrite type="script"><![CDATA[
-        if (this.isAltered) {
-          msg ("You have already altered the schedule.")
-        }
-        else {
-          msg ("You use the Shkruesiverita to change the performance time to 'NOW - IMMEDIATELY'.<br/><br/>A servant knocks at the door moments later.<br/><br/>Servant: \"Maestro Cardinali? The guests are assembled in the Music Salon for your performance.\"<br/><br/>Maestro Enzo: \"What? Now? But I am not prepared!\"<br/><br/>Servant: \"The schedule says immediately, Maestro. They are waiting.\"<br/><br/>The Maestro grumbles but gathers his violin and shuffles out, muttering about incompetent schedulers.<br/><br/>You are now alone in the bedchamber.")
-          this.isAltered = true
-          Maestro Enzo.isDistracted = true
-        }
-      ]]></rewrite>
     </object>
   </object>
   <object name="Study">
@@ -1437,11 +1366,6 @@
       </displayverbs>
       <look>A poster showcasing the times of various events occuring during the party. There is a speech being held later later into the night by the host himself, an event no one would want to miss.</look>
       <isDistracted type="boolean">false</isDistracted>
-      <rewrite type="script">
-        msg ("You rewrite the time of the host's speech to be in only a couple of minutes. As the guests in the room take notice, they begin to leave, heading for the ballroom.")
-        set (Poster, "isDistracted", true)
-        RemoveObject (Poster)
-      </rewrite>
     </object>
     <object name="Potted Plant">
       <inherit name="editor_object" />

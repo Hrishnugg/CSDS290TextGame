@@ -1763,6 +1763,10 @@
         msg ("You look through the various drawers in the Filing Cabinet<br/><br/>After some time looking through the various documents, you find what you are looking for.<br/><br/>You pull out the very documents that have ruined your family's name. Guido Giusseppe's corrupt actions have produced these falsified documents.<br/><br/>You now have them in your hands...")
         AddToInventory (Forger Family Documents)
       ]]></onopen>
+      <open type="script"><![CDATA[
+        msg ("You look through the various drawers in the Filing Cabinet<br/><br/>After some time looking through the various documents, you find what you are looking for.<br/><br/>You pull out the very documents that have ruined your family's name. Guido Giusseppe's corrupt actions have produced these falsified documents.<br/><br/>You now have them in your hands...")
+        AddToInventory (Forger Family Documents)
+      ]]></open>
       <object name="Forger Family Documents">
         <inherit name="editor_object" />
         <look>The very documents that led to the downfall of your family's status. You now have the fate of your family in your hands.</look>

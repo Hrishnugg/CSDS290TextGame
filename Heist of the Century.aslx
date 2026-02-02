@@ -21,24 +21,23 @@
     <lastRoom type="string"></lastRoom>
     <currentRoom type="string"></currentRoom>
     <start type="script"><![CDATA[
-      game.threat = 0
-      msg ("Venice, Italy 1951. <br/><br/>Your name is Dinak Forger, a former Italian nobleman. In 1947 your family was stripped of their nobility status by the ruthless actions of Italian business mogul Guido Giuseppe. Through shady business practices and corruption, Giusseppe has managed to falsify and produce documents to ruin the Forger family’s name, and claim ultimate power over the Italian business scene. <br/><br/>While Giusseppe has won the battle that leading to the demise of your family's legacy, the Forger's story does not end here. You have spent the last four years sturggling to make ends meet. As a result you have resorted to theivery and manipulation in order to survive. <br/><br/>Three years after the demise of your family's name you have uncovered the tool that directly led to the Forger family’s rise to power, the Shkruesiverita.The Shkruesiverita is a powerful pencil that allows the writer to alter any text in the world, be it signs, texts etched in stone, and most importantly to you, legal and business documents to restore your family’s status.<br/><br/>In order to do this, you must find a way into the Giuseppe estate, break into the secured vault, and use the Shkruesiverita to delegitimize the documents responsible for the collapse of your family. Luckily for you, Giusseppe, in his extravagance and narcissism, is holding what is being dubbed \"The Party of the Century” after his rise to the peak of Italian business. This masquerade party presents you with an opportunity to use his skills as a thief, and more importantly the Shkruesiverita, to sneak and manipulate his way through the party and security to get to the Giuseppe Estate’s vault. You will have to deal with the other guests of European nobility, guards and security, and Guido Giusseppe himself to puzzle your way through to the vault. <br/>")
+      msg ("Venice, Italy 1951. <br/><br/>Your name is Dinak Forger, a former Italian nobleman. In 1947 your family was stripped of their noble status by the ruthless actions of Italian business mogul Guido Giuseppe. Through shady business practices and corruption, Giusseppe has managed to falsify and produce documents to ruin the Forger family’s name, and claim ultimate power over the Italian business scene. <br/><br/>While Giusseppe has won the battle, leading to the demise of your family's legacy, the Forger's story does not end here. You have spent the last four years struggling to make ends meet. As a result you have resorted to thievery and manipulation in order to survive. <br/><br/>Three years after the demise of your family's name you have uncovered the tool that directly led to the Forger family’s rise to power, the Shkruesiverita.The Shkruesiverita is a powerful pencil that allows the writer to alter any text in the world, be it signs, texts etched in stone, and most importantly to you, legal and business documents to restore your family’s status.<br/><br/>In order to do this, you must find a way into the Giuseppe estate, break into the secured vault, and use the Shkruesiverita to delegitimize the documents responsible for the collapse of your family. Luckily for you, Giusseppe, in his extravagance and narcissism, is holding what is being dubbed \"The Party of the Century” after his rise to the peak of Italian business. This masquerade party presents you with an opportunity to use your skills as a thief, and more importantly the Shkruesiverita, to sneak and manipulate you way through the party and security to get to the Giuseppe Estate’s vault. You will have to deal with the other guests of European nobility, guards and security, and Guido Giusseppe himself to puzzle your way through to the vault. <br/>")
     ]]></start>
-    <roomenter type="script">
-      if (game.threat = 10) {
+    <roomenter type="script"><![CDATA[
+      if (game.threat >= 10) {
         if (player.parent.name = this.lastRoom) {
           msg ("The guards have caught up to you, and you are thrown in the building's cellar to rot forever.")
           finish
         }
         else {
-          msg ("You are being pursued by guards, you cannot return to the room you came from, lest you get caught.")
+          msg ("You are being pursued by guards, you cannot return to the room you came from (" + this.currentRoom + "), lest you get caught.")
           msg ("You have 2 actions before the guards catch up.")
           game.guardTimer = 3
           this.lastRoom = this.currentRoom
           this.currentRoom = player.parent.name
         }
       }
-    </roomenter>
+    ]]></roomenter>
     <object name="Shining Key">
       <inherit name="editor_object" />
       <look>A shining key, quite hard to hide from anyone looking at you.</look>
@@ -147,12 +146,12 @@
             }
           </item>
           <item key="ServantLedger"><![CDATA[
-            if (Servant's Ledger.isAltered) {
+            if (ServantLedger.isAltered) {
               msg ("You have already altered Lucia's entry.")
             }
             else {
               msg ("You use the Shkruesiverita to alter Lucia's entry:<br/><br/>From: \"Lucia Benedetti - Owes: 500 Lira - Interest accruing\"<br/>To: \"Lucia Benedetti - Owes: 0 Lira - PAID IN FULL\"<br/><br/>The ink shimmers and settles into place. As far as this ledger is concerned, Lucia is free.")
-              set (Servant's Ledger, "isAltered", true)
+              set (ServantLedger, "isAltered", true)
             }
           ]]></item>
           <item key="Party Schedule"><![CDATA[
@@ -1171,6 +1170,7 @@
           msg ("A beautiful painting of the Austrian Alps, hanging slightly askew. Following the Baron's hint (or taking advantage of his absence), you look behind it.<br/><br/>Hidden in a small pouch attached to the frame, you find a document: a detailed schedule of guard rotations in the Giuseppe estate.<br/><br/>This could be very useful for timing your movements through the basement.")
           this.hasBeenSearched = true
           AddToInventory (Guard Schedule)
+          MakeObjectVisible (Guard Schedule)
         }
         else {
           msg ("A beautiful painting of the Austrian Alps in winter. It hangs slightly askew on the wall. The Baron notices your interest and shifts slightly, blocking your view of it.")
@@ -1803,11 +1803,6 @@
     <defaultexpression>WriteVerb(game.pov, "can't") + " put item through " + object.article + "."</defaultexpression>
   </verb>
   <verb>
-    <property>search</property>
-    <pattern>search</pattern>
-    <defaultexpression>WriteVerb(game.pov, "can't") + " search " + object.article + "."</defaultexpression>
-  </verb>
-  <verb>
     <property>open</property>
     <pattern>open</pattern>
     <defaultexpression>WriteVerb(game.pov, "can't") + " open " + object.article + "."</defaultexpression>
@@ -1819,8 +1814,8 @@
   </verb>
   <turnscript name="Guard Check">
     <enabled />
-    <script>
-      if (game.threat = 10) {
+    <script><![CDATA[
+      if (game.threat >= 10) {
         if (game.guardTimer = 0) {
           msg ("The guards have caught up to you, and you are thrown in the building's cellar to rot forever.")
           finish
@@ -1830,6 +1825,6 @@
           msg ("You have " + game.guardTimer + " turn(s) left")
         }
       }
-    </script>
+    ]]></script>
   </turnscript>
 </asl>

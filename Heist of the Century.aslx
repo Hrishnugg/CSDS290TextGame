@@ -76,6 +76,8 @@
       <knowsVaultFirstDigit type="boolean">false</knowsVaultFirstDigit>
       <knowsVaultSecondDigit type="boolean">false</knowsVaultSecondDigit>
       <knowsVaultThirdDigit type="boolean">false</knowsVaultThirdDigit>
+      <listenedToMusicians type="boolean">false</listenedToMusicians>
+      <conversedWithGuests type="boolean">false</conversedWithGuests>
       <object name="Shkruesiverita">
         <inherit name="editor_object" />
         <look>The Shkruesiverita is a powerful tool used to alter any text in the world. This tool is what your ancestors used to rise to power. Though thought lost to time, it has found its way to your hands. Use this tool to help navigate, manipulate, and stealth your way through the party to get to the vault and restore your family's status.</look>
@@ -634,9 +636,19 @@
         <value>Look at</value>
       </displayverbs>
       <listen type="script"><![CDATA[
-        msg ("You take a moment to appreciate the music at the party. Listening to the various instruments at work. You blend in with the various guests also appreciating the music.<br/><br/>(Threat Level Decreased)")
-        if (game.threat > 0) {
+        if (game.threat > 0 and game.threat < 7 and not player.listenedToMusicians) {
           game.threat = game.threat - 1
+          msg ("You take a moment to appreciate the music at the party. Listening to the various instruments at work. You blend in with the various guests also appreciating the music. They notice you there so you won't be able to blend in again.<br/><br/>(Threat Level Decreased)")
+          player.listenedToMusicians = true
+        }
+        else if (game.threat > 6 and not player.listenedToMusicians) {
+          msg ("You take a moment to appreciate the music at the party. Listening to the various instruments at work. Despite trying to blend into the crowd your threat level is too high to decrease.")
+        }
+        else if (player.listenedToMusicians) {
+          msg ("You have already listened to the musicians play.")
+        }
+        else {
+          msg ("You take a moment to appreciate the music at the party. Listening to the various instruments at work. You keep your distance from the other guests as to not bring attention to yourself. This may be a good spot to blend if if things go slightly wrong...")
         }
       ]]></listen>
     </object>
@@ -1489,9 +1501,19 @@
       <inherit name="maleplural" />
       <look>You see various guests conversing and relaxing from the party.</look>
       <speak type="script"><![CDATA[
-        msg ("You take a moment to converse with the various guests at the party. You blend in with the multiple guests and talk about many different things.<br/><br/>(Theat Level Decreased)")
-        if (game.threat > 0) {
+        if (game.threat > 0 and game.threat < 7 and not player.conversedWithGuests) {
           game.threat = game.threat - 1
+          msg ("You take a moment to converse with the guests of the party. You make an effort to blend into the various people here. You won't be able to blend in again though....<br/><br/>(Threat Level Decreased)")
+          player.conversedWithGuests = true
+        }
+        else if (game.threat > 6 and not player.conversedWithGuests) {
+          msg ("You take a moment to converse with the guests of the party. Despite trying to blend in with the guests your threat level is too high to decrease.")
+        }
+        else if (player.conversedWithGuests) {
+          msg ("You have already conversed with the guests.")
+        }
+        else {
+          msg ("You take a moment to converse with the guests of the party. You stay rather reserved as to not bring attention to yourself. This may be a good spot to blend if if things go slightly wrong...")
         }
       ]]></speak>
     </object>

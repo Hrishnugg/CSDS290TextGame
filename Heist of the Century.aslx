@@ -3,6 +3,7 @@
   <include ref="English.aslx" />
   <include ref="Core.aslx" />
   <game name="Heist of the Century">
+    <inherit name="theme_retro" />
     <gameid>4be257b7-c6e2-4449-9055-55394a702d93</gameid>
     <version>1.0</version>
     <firstpublished>2026</firstpublished>
@@ -38,6 +39,7 @@
         }
       }
     ]]></roomenter>
+    <panestheme>Black</panestheme>
     <object name="Shining Key">
       <inherit name="editor_object" />
       <look>A shining key, quite hard to hide from anyone looking at you.</look>

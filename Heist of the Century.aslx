@@ -21,7 +21,7 @@
     <lastRoom type="string"></lastRoom>
     <currentRoom type="string"></currentRoom>
     <start type="script"><![CDATA[
-      msg ("Venice, Italy 1951. <br/><br/>Your name is Dinak Forger, a former Italian nobleman. In 1947 your family was stripped of their noble status by the ruthless actions of Italian business mogul Guido Giuseppe. Through shady business practices and corruption, Giusseppe has managed to falsify and produce documents to ruin the Forger family’s name, and claim ultimate power over the Italian business scene. <br/><br/>While Giusseppe has won the battle, leading to the demise of your family's legacy, the Forger's story does not end here. You have spent the last four years struggling to make ends meet. As a result you have resorted to thievery and manipulation in order to survive. <br/><br/>Three years after the demise of your family's name you have uncovered the tool that directly led to the Forger family’s rise to power, the Shkruesiverita.The Shkruesiverita is a powerful pencil that allows the writer to alter any text in the world, be it signs, texts etched in stone, and most importantly to you, legal and business documents to restore your family’s status.<br/><br/>In order to do this, you must find a way into the Giuseppe estate, break into the secured vault, and use the Shkruesiverita to delegitimize the documents responsible for the collapse of your family. Luckily for you, Giusseppe, in his extravagance and narcissism, is holding what is being dubbed \"The Party of the Century” after his rise to the peak of Italian business. This masquerade party presents you with an opportunity to use your skills as a thief, and more importantly the Shkruesiverita, to sneak and manipulate you way through the party and security to get to the Giuseppe Estate’s vault. You will have to deal with the other guests of European nobility, guards and security, and Guido Giusseppe himself to puzzle your way through to the vault. <br/>")
+      msg ("Venice, Italy 1951. <br/><br/>Your name is Dinak Forger, a former Italian nobleman. In 1947 your family was stripped of their noble status by the ruthless actions of Italian business mogul Guido Giuseppe. Through shady business practices and corruption, Giusseppe has managed to falsify and produce documents to ruin the Forger family’s name, and claim ultimate power over the Italian business scene. <br/><br/>While Giusseppe has won the battle, leading to the demise of your family's legacy, the Forger's story does not end here. You have spent the last four years struggling to make ends meet. As a result you have resorted to thievery and manipulation in order to survive. <br/><br/>Three years after the demise of your family's name you have uncovered the tool that directly led to the Forger family’s rise to power, the Shkruesiverita.The Shkruesiverita is a powerful pencil that allows the writer to alter any text in the world, be it signs, texts etched in stone, and most importantly to you, legal and business documents to restore your family’s status.<br/><br/>In order to do this, you must find a way into the Giuseppe estate, break into the secured vault, and use the Shkruesiverita to delegitimize the documents responsible for the collapse of your family. Luckily for you, Giusseppe, in his extravagance and narcissism, is holding what is being dubbed \"The Party of the Century” after his rise to the peak of Italian business. This masquerade party presents you with an opportunity to use your skills as a thief, and more importantly the Shkruesiverita, to sneak and manipulate you way through the party and security to get to the Giuseppe Estate’s vault. You will have to deal with the other guests of European nobility, guards and security, and Guido Giusseppe himself to puzzle your way through to the vault. <br/><br/>On the right-hand side of your screen, you'll see your inventory and the various objects and people in the current room. Click on your items to use them, and any new objects you discover will appear in the room menu. Best of luck with your heist.<br/>")
     ]]></start>
     <roomenter type="script"><![CDATA[
       if (game.threat >= 10) {
@@ -319,7 +319,7 @@
         ShowMenu ("What would you like to say?", topics, false) {
           switch (result) {
             case ("What is your name") {
-              msg ("Woman: \"I am Chiara Benedetti, pleased to meet you\"<br/><br/>She extends her hand out respectfully")
+              msg ("Woman: \"I am Chiara Benedetti, pleased to meet you\"<br/><br/>She extends her hand out respectfully, and you respond in kind.")
             }
             case ("What is your profession") {
               msg ("Woman: \"I am an actress\", She says in a prideful way<br/><br/>Woman: \"You may have seen some of the films I was in.\"")
@@ -680,7 +680,7 @@
       <look>A rotund man with a thick mustache and a tall chef's hat. He barks orders at the kitchen staff while frantically stirring multiple pots. Sweat beads on his forehead.</look>
       <speak type="script"><![CDATA[
         if (this.hasReceivedSaffron) {
-          msg ("Head Chef Marco: \"Ah, my friend! The saffron risotto was a triumph! If you need anything, just ask!\"")
+          msg ("Head Chef Marco: \"Ah, my friend! The saffron risotto was a triumph! Please, if you need anything else, just go down the basement and grab what you need!\"")
         }
         else {
           msg ("The chef barely acknowledges you, waving a ladle dismissively.")
@@ -795,7 +795,7 @@
       <giveto type="scriptdictionary">
         <item key="Head Chef"><![CDATA[
           if (Turmeric Jar.isAltered) {
-            msg ("You present the jar to the Head Chef.<br/><br/>Head Chef Marco: \"Saffron! You found saffron! You are a miracle worker, my friend!\"<br/><br/>He snatches the jar and immediately begins adding it to the risotto.<br/><br/>Head Chef Marco: \"The VIP table will have their risotto! And you - you deserve a reward. Come, I will take you to the wine cellar myself to select the finest bottle!\"<br/><br/>He escorts you toward the basement entrance, waving off any objections from the servants.<br/><br/>Head Chef Marco: \"Let this guest through! He is with me!\"<br/><br/>Lucia steps aside, looking surprised but relieved.")
+            msg ("You present the jar to the Head Chef.<br/><br/>Head Chef Marco: \"Saffron! You found saffron! You are a miracle worker, my friend!\"<br/><br/>He snatches the jar and immediately begins adding it to the risotto.<br/><br/>Head Chef Marco: \"The VIP table will have their risotto! And you - you deserve a reward. Come, I will let you into the basement, you may take any of the wine you need from the cellar down there!\"<br/><br/>He escorts you toward the basement entrance, waving off any objections from the servants.<br/><br/>Head Chef Marco: \"Let this guest through! He is with me!\"<br/><br/>Lucia steps aside, looking surprised but relieved.")
             Head Chef.hasReceivedSaffron = true
             RemoveObject (Turmeric Jar)
             basementEntrance.isLocked = false

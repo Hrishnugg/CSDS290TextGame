@@ -1522,6 +1522,7 @@
   </object>
   <object name="Basement Entrance">
     <inherit name="editor_room" />
+    <description>The entrance to the basement of the Giusseppe estate. There is a change in style going from the lavish and wealthy looking upper levels to the simple and old looking basement.</description>
     <exit alias="up" to="Kitchen">
       <inherit name="updirection" />
     </exit>

@@ -21,6 +21,7 @@
     <guardTimer type="int">3</guardTimer>
     <lastRoom type="string"></lastRoom>
     <currentRoom type="string"></currentRoom>
+    <panestheme>Black</panestheme>
     <start type="script"><![CDATA[
       msg ("Venice, Italy 1951. <br/><br/>Your name is Dinak Forger, a former Italian nobleman. In 1947 your family was stripped of their noble status by the ruthless actions of Italian business mogul Guido Giuseppe. Through shady business practices and corruption, Giusseppe has managed to falsify and produce documents to ruin the Forger family’s name, and claim ultimate power over the Italian business scene. <br/><br/>While Giusseppe has won the battle, leading to the demise of your family's legacy, the Forger's story does not end here. You have spent the last four years struggling to make ends meet. As a result you have resorted to thievery and manipulation in order to survive. <br/><br/>Three years after the demise of your family's name you have uncovered the tool that directly led to the Forger family’s rise to power, the Shkruesiverita.The Shkruesiverita is a powerful pencil that allows the writer to alter any text in the world, be it signs, texts etched in stone, and most importantly to you, legal and business documents to restore your family’s status.<br/><br/>In order to do this, you must find a way into the Giuseppe estate, break into the secured vault, and use the Shkruesiverita to delegitimize the documents responsible for the collapse of your family. Luckily for you, Giusseppe, in his extravagance and narcissism, is holding what is being dubbed \"The Party of the Century” after his rise to the peak of Italian business. This masquerade party presents you with an opportunity to use your skills as a thief, and more importantly the Shkruesiverita, to sneak and manipulate you way through the party and security to get to the Giuseppe Estate’s vault. You will have to deal with the other guests of European nobility, guards and security, and Guido Giusseppe himself to puzzle your way through to the vault. <br/><br/>On the right-hand side of your screen, you'll see your inventory and the various objects and people in the current room. Click on your items to use them, and any new objects you discover will appear in the room menu. Best of luck with your heist.<br/>")
     ]]></start>
@@ -39,7 +40,6 @@
         }
       }
     ]]></roomenter>
-    <panestheme>Black</panestheme>
     <object name="Shining Key">
       <inherit name="editor_object" />
       <look>A shining key, quite hard to hide from anyone looking at you.</look>
@@ -1531,12 +1531,14 @@
   </object>
   <object name="Wine Cellar">
     <inherit name="editor_room" />
+    <description>A wine cellar made to store the finest of wines that Guido Giusseppe has managed to procure. It seems that most of the wines have already been taken for consumption in the party.</description>
     <exit alias="northwest" to="Basement Main">
       <inherit name="northwestdirection" />
     </exit>
   </object>
   <object name="Basement Main">
     <inherit name="editor_room" />
+    <description>The main room of the basement. This connects all of the rooms in the basement. Despite the lavish interior in the rest of the estate, this part seems more modest and empty.</description>
     <exit alias="northeast" to="Basement Entrance">
       <inherit name="northeastdirection" />
     </exit>

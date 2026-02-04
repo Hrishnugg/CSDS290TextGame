@@ -469,6 +469,24 @@
           msg ("A stunning portrait of a Venetian Duke in ceremonial robes, displayed behind a velvet rope in the restricted area. The guard watches it closely.<br/><br/>Something about the painting seems strangely familiar to you...")
         }
       ]]></look>
+      <object name="Forger Family Signet Ring">
+        <inherit name="editor_object" />
+        <visible />
+        <look>Your family's signet ring, bearing the Forger crest. It was lost when your family fell from grace. Having it back feels like reclaiming a piece of your identity.</look>
+        <drop type="boolean">false</drop>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+        </inventoryverbs>
+      </object>
+      <object name="Faded Letter">
+        <inherit name="editor_object" />
+        <visible />
+        <look><![CDATA[A faded letter from your grandfather, hidden behind the painting for decades. It reads:<br/><br/>"My dear heir, if you are reading this, then our family has fallen on dark times. Know that Giuseppe's vault holds more than documents - it holds our legacy. The vault is located in the basement. You must find your way there. Look around and you may learn its secrets. Trust no one but family. - Your loving Grandfather"]]></look>
+        <drop type="boolean">false</drop>
+        <inventoryverbs type="stringlist">
+          <value>Look at</value>
+        </inventoryverbs>
+      </object>
     </object>
     <object name="Bronze Sculpture">
       <inherit name="editor_object" />
@@ -497,24 +515,6 @@
           msg ("A velvet rope on brass stands separates visitors from the most valuable painting in the collection. The guard watches it closely.")
         }
       </look>
-    </object>
-    <object name="Forger Family Signet Ring">
-      <inherit name="editor_object" />
-      <visible type="boolean">false</visible>
-      <look>Your family's signet ring, bearing the Forger crest. It was lost when your family fell from grace. Having it back feels like reclaiming a piece of your identity.</look>
-      <drop type="boolean">false</drop>
-      <inventoryverbs type="stringlist">
-        <value>Look at</value>
-      </inventoryverbs>
-    </object>
-    <object name="Faded Letter">
-      <inherit name="editor_object" />
-      <visible type="boolean">false</visible>
-      <look><![CDATA[A faded letter from your grandfather, hidden behind the painting for decades. It reads:<br/><br/>"My dear heir, if you are reading this, then our family has fallen on dark times. Know that Giuseppe's vault holds more than documents - it holds our legacy. The vault can be heard through the walls of the wine cellar. Listen, and you may learn its secrets. Trust no one but family. - Your loving Grandfather"]]></look>
-      <drop type="boolean">false</drop>
-      <inventoryverbs type="stringlist">
-        <value>Look at</value>
-      </inventoryverbs>
     </object>
   </object>
   <object name="Coat Room">

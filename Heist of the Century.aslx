@@ -860,7 +860,7 @@
   <object name="Ballroom Second Floor">
     <inherit name="editor_room" />
     <isHostile />
-    <description>The Giusseppe estate has a second floor to it with another ballroom. It's expensive decorations line the walls, ceiling, and floor. The upstairs ballroom is crowded with people, with many touring the various bedrooms.</description>
+    <description>The Giusseppe estate has a second floor to it with another ballroom. It's expensive decorations line the walls, ceiling, and floor. The upstairs ballroom is crowded with people, with many touring the various bedrooms. The master bedroom lies to the south, locked as always during such events.</description>
     <enter type="script"><![CDATA[
       if (Got(Shining Key) and this.isHostile) {
         msg ("As you walk into the ballroom, people begin to take notice to the bright light emitting from your pocket. One of the guests approaches you.")

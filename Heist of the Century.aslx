@@ -349,9 +349,11 @@
   <object name="Main Ballroom">
     <inherit name="editor_room" />
     <description><![CDATA[You find yourself in the Main Ballroom. Various expensive decorations line the walls of this room. A beautifull chandelier hangs from the ceiling. There a many guests conversing, drinking, and dancing. There are various rooms that are connected to this central hub.<br/><br/>In the middle of the room you can see {object:Guido Giusseppe} himself. ]]></description>
-    <firstenter type="script"><![CDATA[
+    <firstenter type="script">
+    </firstenter>
+    <beforefirstenter type="script"><![CDATA[
       msg ("With the altered Party Invitation showing your name, you present it to the guard at the guest check-in.<br/><br/>He takes a moment to look at it.<br/><br/>...<br/><br/>Guard: \"Welcome to the Party Mr. Forger, I hope you enjoy the festivities\"<br/><br/>With that you have successfully made it into the Giusseppe estate.")
-    ]]></firstenter>
+    ]]></beforefirstenter>
     <exit alias="south" to="Entrance">
       <inherit name="southdirection" />
     </exit>
@@ -377,17 +379,19 @@
       <speak type="script"><![CDATA[
         msg ("You approach him. He does not seem to recognize you.")
         topics = Split ("You have ruined my family's name. I will have my revenge;This is a great party;This party is boring", ";")
-        switch (result) {
-          case ("You have ruined my family's name. I will have my revenge") {
-            msg ("Guido Giusseppe: \"And who might you be?\"<br/><br/>You tell him your name is Dinak Forger<br/><br/>Guido Giusseppe: \"Ah yes, the Forger Family. Your family's downfall was very satisfying to watch. I assume you are here to enact your revenge. You have made a grave mistake by trying to confront me. Guards, sieze this man\"<br/><br/>(Threat Level Maxed)")
-            game.threat = game.threat  = 10
-          }
-          case ("This is a great party") {
-            msg ("Guido Giusseppe: \"Of course, this is the 'Party of the Century' after all. I spared no expense for the festivities.\"")
-          }
-          case ("This party is boring") {
-            msg ("He scoffs...<br/><br/>Guido Giusseppe: \"And who are you? You clearly have no taste for great parties if you are thinking that. I suggest you go somewhere else if you feel that way.\"<br/><br/>There is a slight look of dismay in his face.<br/><br/>(Threat Level increased)")
-            game.threat = game.threat + 1
+        ShowMenu ("What would you like to say?", topics, false) {
+          switch (result) {
+            case ("You have ruined my family's name. I will have my revenge") {
+              msg ("Guido Giusseppe: \"And who might you be?\"<br/><br/>You tell him your name is Dinak Forger<br/><br/>Guido Giusseppe: \"Ah yes, the Forger Family. Your family's downfall was very satisfying to watch. I assume you are here to enact your revenge. You have made a grave mistake by trying to confront me. Guards, sieze this man!\"<br/><br/>(Threat Level Maxed)")
+              game.threat = game.threat  + 10
+            }
+            case ("This is a great party") {
+              msg ("Guido Giusseppe: \"Of course, this is the 'Party of the Century' after all. I spared no expense for the festivities.\"")
+            }
+            case ("This party is boring") {
+              msg ("He scoffs...<br/><br/>Guido Giusseppe: \"And who are you? You clearly have no taste for great parties if you are thinking that. I suggest you go somewhere else if you feel that way.\"<br/><br/>There is a slight look of dismay in his face.<br/><br/>(Threat Level increased)")
+              game.threat = game.threat + 1
+            }
           }
         }
       ]]></speak>
